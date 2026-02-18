@@ -6,6 +6,8 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-deep-space text-white flex items-center justify-center p-4">
       <div className="glass-card w-full max-w-md p-8 rounded-lg text-center">
-        <Image width="100" height="100" src="/pp-logo-1.png" className=" w-44 mb-4 brightness-0 invert-0 contrast-0 mx-auto"/>
+        <Image width="100" height="100" src="/pp-logo-1.png" alt="Passport Pulse Logo" className=" w-44 mb-4 brightness-0 invert-0 contrast-0 mx-auto"/>
         <p className="text-gray-400 mb-6">
           Welcome back! Please log in to your account.
         </p>

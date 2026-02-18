@@ -5,6 +5,8 @@ import axios from 'axios';
 import Link from 'next/link';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
+export const dynamic = 'force-dynamic';
+
 const MyBlogs = () => {
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);

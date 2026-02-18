@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '@/app/context/AuthContext'; // useAuth ইম্পোর্ট করুন
+import { useAuth } from '../../../context/AuthContext';
+
+export const dynamic = 'force-dynamic';
 
 export default function UserManagement() {
       const [users, setUsers] = useState([]);

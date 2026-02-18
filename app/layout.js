@@ -4,6 +4,8 @@ import { AuthProvider } from "./context/AuthContext";
 import ClientLayout from "./components/ClientLayout";
 import Script from "next/script";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   metadataBase: new URL("https://www.passportpulse.com"),
   title: {

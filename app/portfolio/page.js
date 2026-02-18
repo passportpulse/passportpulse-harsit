@@ -5,6 +5,8 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 
+export const dynamic = 'force-dynamic';
+
 const portfolioData = [
 
     {

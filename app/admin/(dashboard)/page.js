@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaEnvelopeOpenText } from 'react-icons/fa';
 
+export const dynamic = 'force-dynamic';
+
 const StatsCard = ({ icon: Icon, title, value, color }) => (
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex items-center gap-6">
             <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${color}`}>

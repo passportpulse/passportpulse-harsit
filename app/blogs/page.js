@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 
+export const dynamic = 'force-dynamic';
+
 const SkeletonCard = () => (
   <div className="glass-card rounded-2xl overflow-hidden h-full flex flex-col animate-pulse">
     <div className="w-full h-52 bg-slate-800"></div>

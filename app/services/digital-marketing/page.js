@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 const marketingPillars = [
   { icon: "fas fa-chart-line", title: "SEO Strategy", description: "Achieve top rankings with comprehensive, white-hat search engine optimization." },
   { icon: "fas fa-users", title: "Social Media Marketing", description: "Build engaged communities and drive targeted traffic across all major platforms." },

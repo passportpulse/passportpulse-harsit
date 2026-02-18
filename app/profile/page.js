@@ -8,6 +8,8 @@ import ProfileSettings from './components/ProfileSettings';
 import MyBlogs from './components/MyBlogs';
 import ChangePassword from './components/ChangePassword';
 
+export const dynamic = 'force-dynamic';
+
 const ProfilePage = () => {
       const { user, loading } = useAuth();
       const router = useRouter();

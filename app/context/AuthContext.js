@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect, useContext, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
       const [user, setUser] = useState(null);
       const [loading, setLoading] = useState(true);
-      const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false); // <-- Ei line-ti add kora hoyeche
+      const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false); 
       const router = useRouter();
       const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,9 +20,9 @@ export const AuthProvider = ({ children }) => {
             } else {
                   setLoading(false);
             }
-      }, []);
+      }, [fetchMe]);
 
-      const fetchMe = async (token) => {
+      const fetchMe = useCallback(async (token) => {
             setLoading(true);
             try {
                   const response = await axios.get(`${BASE_URL}/auth/getme`, {
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
             } finally {
                   setLoading(false);
             }
-      };
+      }, [BASE_URL]);
 
       const login = async (email, password) => {
             setLoading(true);

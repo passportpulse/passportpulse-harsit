@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 const designServices = [
   { icon: "fas fa-bezier-curve", title: "Brand Identity", description: "Logo design, style guides, and complete brand systems that define your market presence." },
   { icon: "fas fa-desktop", title: "UI/UX Design", description: "Designing intuitive, user-centric interfaces that convert visitors into loyal customers." },

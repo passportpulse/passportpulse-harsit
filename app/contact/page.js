@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 
+export const dynamic = 'force-dynamic';
+
 const FaqItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (

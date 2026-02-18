@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 
+export const dynamic = 'force-dynamic';
+
 const ChangePassword = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');

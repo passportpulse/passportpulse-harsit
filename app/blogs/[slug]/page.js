@@ -7,6 +7,8 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/atom-one-dark.css";
 import { FaUser, FaCalendarAlt } from "react-icons/fa";
 
+export const dynamic = 'force-dynamic';
+
 async function getPost(slug) {
   try {
     const res = await fetch(

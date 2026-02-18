@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext"; // <-- AuthContext import
 
+export const dynamic = 'force-dynamic';
+
 const services = [
   {
     icon: "fas fa-laptop-code",

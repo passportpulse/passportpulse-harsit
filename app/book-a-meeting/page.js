@@ -3,6 +3,8 @@
 import React from "react";
 import { InlineWidget } from "react-calendly";
 
+export const dynamic = 'force-dynamic';
+
 export default function BookMeetingPage() {
   return (
     <main className="bg-white text-gray-900">

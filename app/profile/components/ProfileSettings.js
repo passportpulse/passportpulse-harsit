@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import Image from "next/image";
 import { FaCamera } from "react-icons/fa";
+
+export const dynamic = 'force-dynamic';
 
 const ProfileSettings = () => {
       const { user, setUser } = useAuth();

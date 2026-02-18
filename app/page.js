@@ -7,6 +7,8 @@ import WhyChooseUs from "./components/WhyChooseUs";
 import AboutSummary from './components/AboutSummary';
 import TechnologyStack from "./components/TechnologyStack";
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <>

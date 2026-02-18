@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 const features = [
   { icon: "fas fa-code", title: "Custom Logic", description: "Bespoke development tailored to your unique business processes, guaranteeing a perfect fit." },
   { icon: "fas fa-tachometer-alt", title: "High Performance", description: "Building with Next.js and MERN stack for lightning-fast load times and SEO excellence." },

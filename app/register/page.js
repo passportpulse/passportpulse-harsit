@@ -6,11 +6,12 @@ import Link from "next/link";
 import Modal from '../components/Modal';
 import { useAuth } from "../context/AuthContext";
 
+export const dynamic = 'force-dynamic';
+
 export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
   const router = useRouter();
   const { register, user, loading: authLoading } = useAuth();
 

@@ -4,6 +4,8 @@ import React, { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 const AnimatedSection = ({ children, className = "" }) => {
     const ref = useRef(null);
 
