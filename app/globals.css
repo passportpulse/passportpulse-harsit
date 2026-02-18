@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-poppins: 'Poppins', sans-serif;
+  
+  /* === Dark Mode Palette (Notun Hero-r sathe mil rekhe) === */
+  --background: #0A0F1A;
+  --foreground: #E0F7FA;
+  --foreground-light: #a8b2d1;
+  --card-bg: rgba(12, 19, 39, 0.4);
+  --card-border: rgba(0, 191, 165, 0.15);
+  
+  /* === Brand Palette (Unchanged) === */
+  --primary-glow: rgba(0, 191, 165, 0.3);
+  --primary-color: #00BFA5;
+  --neon-cyan: #00BFA5;
+  --darker-cyan: #008a75;
+  
+  /* === Legacy variables pointed to new values === */
+  --deep-space: var(--background);
+  --off-white-glow: var(--foreground);
+}
+
+body {
+  font-family: var(--font-poppins);
+  color: var(--foreground);
+  background-color: var(--background);
+  overflow-x: hidden;
+}
+
+#preloader {
+    position: fixed;
+    inset: 0;
+    background-color: var(--background);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#preloader-logo-container {
+    opacity: 0;
+}
+
+/* === Dark Mode Glass Card (Ager moto) === */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 40px var(--primary-glow);
+  border-color: rgba(0, 191, 165, 0.4);
+}
+
+/* Floating Buttons (Unchanged) */
+.floating-buttons-container {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1000;
+}
+
+.floating-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 28px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-button:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.floating-button.whatsapp { background-color: #25d366; }
+.floating-button.call { background-color: #3498db; }
+
+@media (max-width: 767px) {
+  .floating-buttons-container {
+    bottom: 90px;
+    right: 15px;
+    gap: 12px;
+  }
+  .floating-button {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
+}
+
+/* Popup Close Button (Dark Mode Style) */
+.popup-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #1f2937;
+  color: #9ca3af;
+  border: 1px solid #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.popup-close-btn:hover {
+  background-color: #374151;
+  color: #e5e7eb;
+  transform: scale(1.1);
+}
