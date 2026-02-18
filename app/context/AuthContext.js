@@ -13,15 +13,6 @@ export const AuthProvider = ({ children }) => {
       const router = useRouter();
       const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-      useEffect(() => {
-            const token = localStorage.getItem("accessToken");
-            if (token) {
-                  fetchMe(token);
-            } else {
-                  setLoading(false);
-            }
-      }, [fetchMe]);
-
       const fetchMe = useCallback(async (token) => {
             setLoading(true);
             try {
@@ -44,6 +35,15 @@ export const AuthProvider = ({ children }) => {
                   setLoading(false);
             }
       }, [BASE_URL]);
+
+      useEffect(() => {
+            const token = localStorage.getItem("accessToken");
+            if (token) {
+                  fetchMe(token);
+            } else {
+                  setLoading(false);
+            }
+      }, [fetchMe]);
 
       const login = async (email, password) => {
             setLoading(true);
