@@ -27,7 +27,7 @@ const HeroForm = () => {
 
         try {
             const response = await axios.post(
-                '/api/admin/contacts',
+                '/api/admin/contacts-db',
                 formData
             );
             if (response.data.success) {

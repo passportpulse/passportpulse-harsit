@@ -48,7 +48,7 @@ export default function ContactUs() {
 
         try {
             const response = await axios.post(
-                '/api/admin/queries', 
+                '/api/admin/queries-db', 
                 formData
             );
             if (response.data.success) {

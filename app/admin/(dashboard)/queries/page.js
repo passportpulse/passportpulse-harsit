@@ -55,7 +55,7 @@ export default function QueriesPage() {
       const fetchQueries = async () => {
             setLoading(true);
             try {
-                  const response = await axios.get('/api/admin/queries');
+                  const response = await axios.get('/api/admin/queries-db');
                   if (response.data.success) {
                         setQueries(response.data.data);
                   } else {

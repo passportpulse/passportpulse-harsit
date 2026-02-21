@@ -60,8 +60,8 @@ export default function AdminDashboard() {
                         console.log('Fetching dashboard data...');
                         
                         const [contactsRes, queriesRes] = await Promise.all([
-                              axios.get('/api/admin/contacts'),
-                              axios.get('/api/admin/queries')
+                              axios.get('/api/admin/contacts-db'),
+                              axios.get('/api/admin/queries-db')
                         ]);
 
                         console.log('Contacts response:', contactsRes.data);

@@ -26,7 +26,7 @@ export default function ContactsPage() {
 
     const fetchContacts = async () => {
         try {
-            const response = await axios.get('/api/admin/contacts');
+            const response = await axios.get('/api/admin/contacts-db');
             if (response.data.success) {
                 setContacts(response.data.data);
             } else {
