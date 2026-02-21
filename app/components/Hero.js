@@ -27,7 +27,7 @@ const HeroForm = () => {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/contacts`,
+                '/api/admin/contacts',
                 formData
             );
             if (response.data.success) {

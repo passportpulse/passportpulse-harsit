@@ -48,7 +48,7 @@ export default function ContactUs() {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/contacts`, 
+                '/api/admin/queries', 
                 formData
             );
             if (response.data.success) {

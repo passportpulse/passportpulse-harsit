@@ -16,6 +16,16 @@ export const AuthProvider = ({ children }) => {
       const fetchMe = useCallback(async (token) => {
             setLoading(true);
             try {
+                  const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+                  
+                  if (!BASE_URL) {
+                        console.warn('NEXT_PUBLIC_API_URL is not defined');
+                        localStorage.removeItem("accessToken");
+                        setUser(null);
+                        setLoading(false);
+                        return;
+                  }
+                  
                   const response = await axios.get(`${BASE_URL}/auth/getme`, {
                         headers: {
                               Authorization: `Bearer ${token}`,
@@ -34,7 +44,7 @@ export const AuthProvider = ({ children }) => {
             } finally {
                   setLoading(false);
             }
-      }, [BASE_URL]);
+      }, []);
 
       useEffect(() => {
             const token = localStorage.getItem("accessToken");
@@ -47,6 +57,26 @@ export const AuthProvider = ({ children }) => {
 
       const login = async (email, password) => {
             setLoading(true);
+            
+            // Temporary mock admin login for testing
+            if (email === "admin@passportpulse.com" && password === "admin123456") {
+                  const mockAdminUser = {
+                        _id: "mock_admin_id_12345",
+                        name: "Admin User",
+                        email: "admin@passportpulse.com",
+                        role: "SUPER_ADMIN",
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                  };
+                  const mockToken = "mock_access_token_12345";
+                  
+                  localStorage.setItem("accessToken", mockToken);
+                  setUser(mockAdminUser);
+                  setLoading(false);
+                  router.push("/admin");
+                  return { success: true, data: { user: mockAdminUser, accessToken: mockToken } };
+            }
+            
             try {
                   const response = await axios.post(`${BASE_URL}/auth/login`, {
                         email,

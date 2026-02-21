@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaTachometerAlt, FaEnvelopeOpenText, FaSignOutAlt, FaHome } from 'react-icons/fa';
+import { FaTachometerAlt, FaEnvelopeOpenText, FaSignOutAlt, FaHome, FaUsers, FaQuestionCircle } from 'react-icons/fa';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 
@@ -12,7 +12,14 @@ const Sidebar = () => {
 
       const navItems = [
             { href: '/admin', icon: FaTachometerAlt, label: 'Dashboard' },
-            { href: '/admin/queries', icon: FaEnvelopeOpenText, label: 'Queries' },
+      ];
+
+      const contactItems = [
+            { href: '/admin/contacts', icon: FaUsers, label: 'Contacts' },
+      ];
+
+      const queryItems = [
+            { href: '/admin/queries', icon: FaQuestionCircle, label: 'Queries' },
       ];
 
       return (
@@ -22,20 +29,60 @@ const Sidebar = () => {
                             <Image src="/pp-logo.png" alt="Passport Pulse Logo" width={100} height={60} className="w-20 h-20 mx-auto" />
                         </Link>
                   </div>
-                  <nav className="flex-1 p-4 space-y-2">
-                        {navItems.map(item => (
-                              <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`flex items-center gap-4 p-3 rounded-lg transition-colors duration-200 ${pathname === item.href
-                                          ? 'bg-[var(--neon-cyan)] text-black'
-                                          : 'text-gray-600 hover:bg-gray-100'
-                                          }`}
-                              >
-                                    <item.icon className="text-xl" />
-                                    <span className="font-semibold">{item.label}</span>
-                              </Link>
-                        ))}
+                  <nav className="flex-1 p-4 space-y-6">
+                        {/* Main Navigation */}
+                        <div>
+                              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Main</h3>
+                              {navItems.map(item => (
+                                    <Link
+                                          key={item.href}
+                                          href={item.href}
+                                          className={`flex items-center gap-4 p-3 rounded-lg transition-colors duration-200 ${pathname === item.href
+                                                ? 'bg-[var(--neon-cyan)] text-black'
+                                                : 'text-gray-600 hover:bg-gray-100'
+                                                }`}
+                                    >
+                                          <item.icon className="text-xl" />
+                                          <span className="font-semibold">{item.label}</span>
+                                    </Link>
+                              ))}
+                        </div>
+
+                        {/* Contacts Section */}
+                        <div>
+                              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Contacts</h3>
+                              {contactItems.map(item => (
+                                    <Link
+                                          key={item.href}
+                                          href={item.href}
+                                          className={`flex items-center gap-4 p-3 rounded-lg transition-colors duration-200 ${pathname === item.href
+                                                ? 'bg-[var(--neon-cyan)] text-black'
+                                                : 'text-gray-600 hover:bg-gray-100'
+                                                }`}
+                                    >
+                                          <item.icon className="text-xl" />
+                                          <span className="font-semibold">{item.label}</span>
+                                    </Link>
+                              ))}
+                        </div>
+
+                        {/* Queries Section */}
+                        <div>
+                              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Queries</h3>
+                              {queryItems.map(item => (
+                                    <Link
+                                          key={item.href}
+                                          href={item.href}
+                                          className={`flex items-center gap-4 p-3 rounded-lg transition-colors duration-200 ${pathname === item.href
+                                                ? 'bg-[var(--neon-cyan)] text-black'
+                                                : 'text-gray-600 hover:bg-gray-100'
+                                                }`}
+                                    >
+                                          <item.icon className="text-xl" />
+                                          <span className="font-semibold">{item.label}</span>
+                                    </Link>
+                              ))}
+                        </div>
                   </nav>
                   <div className="p-4 border-t border-gray-200 space-y-2">
                         <Link

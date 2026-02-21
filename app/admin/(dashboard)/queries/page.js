@@ -52,22 +52,23 @@ export default function QueriesPage() {
 
       const itemsPerPage = 10;
 
-      useEffect(() => {
-            const fetchQueries = async () => {
-                  setLoading(true);
-                  try {
-                        const token = localStorage.getItem('accessToken');
-                        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/contacts`, {
-                              headers: { Authorization: `Bearer ${token}` },
-                        });
-                        setQueries(response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-                  } catch (error) {
-                        console.error("Failed to fetch queries:", error);
-                  } finally {
-                        setLoading(false);
+      const fetchQueries = async () => {
+            setLoading(true);
+            try {
+                  const response = await axios.get('/api/admin/queries');
+                  if (response.data.success) {
+                        setQueries(response.data.data);
+                  } else {
+                        console.error("Failed to fetch queries");
                   }
-            };
+            } catch (error) {
+                  console.error("Error fetching queries:", error);
+            } finally {
+                  setLoading(false);
+            }
+      };
 
+      useEffect(() => {
             fetchQueries();
       }, []);
 
@@ -94,7 +95,15 @@ export default function QueriesPage() {
 
       return (
             <div>
-                  <h1 className="text-4xl font-bold mb-8">Queries</h1>
+                  <div className="mb-6 flex items-center justify-between">
+                        <h1 className="text-4xl font-bold mb-2">Queries</h1>
+                        <button
+                              onClick={fetchQueries}
+                              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        >
+                              Refresh Data
+                        </button>
+                  </div>
 
                   <div className="mb-6 relative">
                         <input
@@ -124,6 +133,7 @@ export default function QueriesPage() {
                                                             <th className="p-4">Email</th>
                                                             <th className="p-4">Contact</th>
                                                             <th className="p-4">Service</th>
+                                                            <th className="p-4">Message</th>
                                                             <th className="p-4">Actions</th>
                                                       </tr>
                                                 </thead>
@@ -138,6 +148,11 @@ export default function QueriesPage() {
                                                                   <td className="p-4 text-gray-600 whitespace-nowrap">{query.contact || 'N/A'}</td>
                                                                   <td className="p-4 text-gray-600 whitespace-nowrap">{query.interested_in}</td>
                                                                   <td className="p-4">
+                                                                        <div className="max-w-xs truncate" title={query.message}>
+                                                                              {query.message || 'No message'}
+                                                                        </div>
+                                                                  </td>
+                                                                  <td className="p-4">
                                                                         <button
                                                                               onClick={() => setSelectedQuery(query)}
                                                                               className="px-3 py-1 bg-[var(--neon-cyan)] text-black text-sm font-semibold rounded-md hover:bg-opacity-80 transition-colors"
@@ -148,7 +163,7 @@ export default function QueriesPage() {
                                                             </tr>
                                                       )) : (
                                                             <tr>
-                                                                  <td colSpan="6" className="p-4 text-center text-gray-500">
+                                                                  <td colSpan="7" className="p-4 text-center text-gray-500">
                                                                         {searchTerm ? 'No queries match your search.' : 'No queries found.'}
                                                                   </td>
                                                             </tr>
