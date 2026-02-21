@@ -12,13 +12,19 @@ async function connectToDatabase() {
     return db;
   }
   
-  client = new MongoClient(mongoUrl, {
-    serverApi: ServerApiVersion.v1,
-  });
-  
-  await client.connect();
-  db = client.db('passportpulse');
-  return db;
+  try {
+    client = new MongoClient(mongoUrl, {
+      serverApi: ServerApiVersion.v1,
+    });
+    
+    await client.connect();
+    db = client.db('passportpulse');
+    console.log('Database connected successfully');
+    return db;
+  } catch (error) {
+    console.error('Database connection error:', error);
+    throw error;
+  }
 }
 
 export async function POST(request) {
@@ -28,7 +34,22 @@ export async function POST(request) {
     
     // Connect to database
     const database = await connectToDatabase();
+    
+    if (!database) {
+      return NextResponse.json(
+        { success: false, message: 'Database connection failed' },
+        { status: 500 }
+      );
+    }
+    
     const usersCollection = database.collection('users');
+    
+    if (!usersCollection) {
+      return NextResponse.json(
+        { success: false, message: 'Users collection not found' },
+        { status: 500 }
+      );
+    }
     
     // Find user by email
     const user = await usersCollection.findOne({ email: email.toLowerCase() });
@@ -90,7 +111,22 @@ export async function GET(request) {
     
     // Connect to database
     const database = await connectToDatabase();
+    
+    if (!database) {
+      return NextResponse.json(
+        { success: false, message: 'Database connection failed' },
+        { status: 500 }
+      );
+    }
+    
     const usersCollection = database.collection('users');
+    
+    if (!usersCollection) {
+      return NextResponse.json(
+        { success: false, message: 'Users collection not found' },
+        { status: 500 }
+      );
+    }
     
     // Extract user ID from token
     const userId = token.replace('db_access_token_', '');

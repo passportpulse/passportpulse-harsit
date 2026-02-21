@@ -93,6 +93,44 @@ export default function QueriesPage() {
             }
       };
 
+      const handleStatusChange = async (queryId, newStatus) => {
+            try {
+                  const response = await axios.put(`/api/admin/queries-db/${queryId}`, {
+                        status: newStatus
+                  });
+                  
+                  if (response.data.success) {
+                        // Update local state
+                        setQueries(prevQueries => 
+                              prevQueries.map(query => 
+                                    query._id === queryId 
+                                          ? { ...query, status: newStatus, updatedAt: new Date() }
+                                          : query
+                              )
+                        );
+                  } else {
+                        console.error("Failed to update status");
+                  }
+            } catch (error) {
+                  console.error("Error updating status:", error);
+            }
+      };
+
+      const getStatusColor = (status) => {
+            switch (status) {
+                  case 'ACTIVE':
+                        return 'bg-blue-100 text-blue-800';
+                  case 'CONNECTED':
+                        return 'bg-green-100 text-green-800';
+                  case 'LOST':
+                        return 'bg-red-100 text-red-800';
+                  case 'CONVERT':
+                        return 'bg-purple-100 text-purple-800';
+                  default:
+                        return 'bg-gray-100 text-gray-800';
+            }
+      };
+
       return (
             <div>
                   <div className="mb-6 flex items-center justify-between">
@@ -134,6 +172,7 @@ export default function QueriesPage() {
                                                             <th className="p-4">Contact</th>
                                                             <th className="p-4">Service</th>
                                                             <th className="p-4">Message</th>
+                                                            <th className="p-4">Status</th>
                                                             <th className="p-4">Actions</th>
                                                       </tr>
                                                 </thead>
@@ -153,6 +192,19 @@ export default function QueriesPage() {
                                                                         </div>
                                                                   </td>
                                                                   <td className="p-4">
+                                                                        <select
+                                                                              value={query.status || 'pending'}
+                                                                              onChange={(e) => handleStatusChange(query._id, e.target.value)}
+                                                                              className={`px-3 py-1 rounded-full text-xs font-semibold border-0 cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-[var(--neon-cyan)] ${getStatusColor(query.status || 'pending')}`}
+                                                                        >
+                                                                              <option value="pending">Pending</option>
+                                                                              <option value="ACTIVE">Active</option>
+                                                                              <option value="CONNECTED">Connected</option>
+                                                                              <option value="LOST">Lost</option>
+                                                                              <option value="CONVERT">Convert</option>
+                                                                        </select>
+                                                                  </td>
+                                                                  <td className="p-4">
                                                                         <button
                                                                               onClick={() => setSelectedQuery(query)}
                                                                               className="px-3 py-1 bg-[var(--neon-cyan)] text-black text-sm font-semibold rounded-md hover:bg-opacity-80 transition-colors"
@@ -163,7 +215,7 @@ export default function QueriesPage() {
                                                             </tr>
                                                       )) : (
                                                             <tr>
-                                                                  <td colSpan="7" className="p-4 text-center text-gray-500">
+                                                                  <td colSpan="8" className="p-4 text-center text-gray-500">
                                                                         {searchTerm ? 'No queries match your search.' : 'No queries found.'}
                                                                   </td>
                                                             </tr>

@@ -42,8 +42,7 @@ export default function ContactsPage() {
 
     const updateContactStatus = async (contactId, newStatus) => {
         try {
-            const response = await axios.put('/api/admin/contacts', {
-                id: contactId,
+            const response = await axios.put(`/api/admin/contacts-db/${contactId}`, {
                 status: newStatus
             });
             
@@ -66,7 +65,7 @@ export default function ContactsPage() {
         if (!confirm("Are you sure you want to delete this contact?")) return;
         
         try {
-            const response = await axios.delete(`/api/admin/contacts?id=${contactId}`);
+            const response = await axios.delete(`/api/admin/contacts-db/${contactId}`);
             if (response.data.success) {
                 setContacts(contacts.filter(contact => contact.id !== contactId));
             } else {
