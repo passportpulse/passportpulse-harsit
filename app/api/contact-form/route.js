@@ -63,14 +63,7 @@ export async function POST(request) {
     // Store submission
     contactSubmissions.push(newSubmission);
     
-    console.log('New contact submission received:', {
-      id: newSubmission.id,
-      name: newSubmission.name,
-      email: newSubmission.email,
-      company: newSubmission.company,
-      interested_in: newSubmission.interested_in,
-      timestamp: newSubmission.createdAt
-    });
+
     
     // Return success response
     return NextResponse.json(
@@ -87,7 +80,6 @@ export async function POST(request) {
     );
     
   } catch (error) {
-    console.error('Contact form submission error:', error);
     
     return NextResponse.json(
       { 
@@ -117,7 +109,6 @@ export async function GET() {
     );
     
   } catch (error) {
-    console.error('Error fetching contact submissions:', error);
     
     return NextResponse.json(
       { 
@@ -168,7 +159,6 @@ export async function DELETE(request) {
     );
     
   } catch (error) {
-    console.error('Error deleting contact submission:', error);
     
     return NextResponse.json(
       { 

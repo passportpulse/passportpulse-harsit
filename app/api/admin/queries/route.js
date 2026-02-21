@@ -26,15 +26,7 @@ export async function POST(request) {
     
     // Store query
     adminQueries.push(newQuery);
-    
-    console.log('Admin: New query added:', {
-      id: newQuery.id,
-      name: newQuery.name,
-      email: newQuery.email,
-      subject: newQuery.subject,
-      interested_in: newQuery.interested_in,
-      priority: newQuery.priority
-    });
+
     
     return NextResponse.json(
       { 
@@ -46,7 +38,6 @@ export async function POST(request) {
     );
     
   } catch (error) {
-    console.error('Admin queries API error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -84,7 +75,6 @@ export async function GET() {
     );
     
   } catch (error) {
-    console.error('Error fetching admin queries:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -139,7 +129,6 @@ export async function PUT(request) {
     );
     
   } catch (error) {
-    console.error('Error updating query:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -188,7 +177,6 @@ export async function DELETE(request) {
     );
     
   } catch (error) {
-    console.error('Error deleting query:', error);
     return NextResponse.json(
       { 
         success: false, 

@@ -19,10 +19,8 @@ async function connectToDatabase() {
     
     await client.connect();
     db = client.db('passportpulse');
-    console.log('Database connected successfully');
     return db;
   } catch (error) {
-    console.error('Database connection error:', error);
     throw error;
   }
 }
@@ -33,7 +31,6 @@ export async function PUT(request, { params }) {
     const body = await request.json();
     const { role } = body;
     
-    console.log('PUT request received for user role update:', { userId: id, role });
     
     // Connect to database
     const database = await connectToDatabase();
@@ -57,11 +54,7 @@ export async function PUT(request, { params }) {
       );
     }
     
-    console.log('Database: User role updated successfully:', {
-      userId: id,
-      newRole: role,
-      updatedAt: new Date()
-    });
+
     
     // Get updated user
     const updatedUser = await usersCollection.findOne({ _id: new ObjectId(id) });
@@ -76,7 +69,6 @@ export async function PUT(request, { params }) {
     );
     
   } catch (error) {
-    console.error('Database role update error:', error);
     return NextResponse.json(
       { 
         success: false, 

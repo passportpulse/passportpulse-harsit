@@ -21,6 +21,7 @@
     "@uiw/react-md-editor": "^4.0.8",
     "autoprefixer": "^10.4.17",
     "axios": "^1.11.0",
+    "bcryptjs": "^3.0.3",
     "easymde": "^2.20.0",
     "gsap": "^3.13.0",
     "mongodb": "^7.1.0",

@@ -19,7 +19,6 @@ async function getPost(slug) {
     const result = await res.json();
     return result.data;
   } catch (error) {
-    console.error("Failed to fetch post:", error);
     return null;
   }
 }
@@ -131,7 +130,6 @@ export async function generateStaticParams() {
       slug: post._id,
     }));
   } catch (error) {
-    console.error("Could not fetch posts for static generation:", error);
     return [];
   }
 }

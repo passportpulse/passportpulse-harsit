@@ -3,6 +3,8 @@
 import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { FaUser, FaEnvelope, FaBuilding, FaMapMarkerAlt, FaPhone, FaRegCheckCircle, FaSearch, FaTimes } from 'react-icons/fa';
+import { useAuth } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
@@ -44,43 +46,61 @@ const QueryModal = ({ query, onClose }) => (
 );
 
 export default function QueriesPage() {
+      const { user, loading } = useAuth();
+      const router = useRouter();
       const [queries, setQueries] = useState([]);
-      const [loading, setLoading] = useState(true);
       const [searchTerm, setSearchTerm] = useState('');
       const [currentPage, setCurrentPage] = useState(1);
       const [selectedQuery, setSelectedQuery] = useState(null);
+      const [loadingQueries, setLoadingQueries] = useState(true);
+      const [statusFilter, setStatusFilter] = useState("all");
 
       const itemsPerPage = 10;
 
+      useEffect(() => {
+            if (!loading && !user) {
+                  router.push('/login');
+            } else if (!loading && user && user.role !== "ADMIN" && user.role !== "SUPER_ADMIN") {
+                  router.push('/');
+            }
+      }, [user, loading, router]);
+
       const fetchQueries = async () => {
-            setLoading(true);
+            setLoadingQueries(true);
             try {
                   const response = await axios.get('/api/admin/queries-db');
+                  
                   if (response.data.success) {
                         setQueries(response.data.data);
                   } else {
-                        console.error("Failed to fetch queries");
                   }
             } catch (error) {
-                  console.error("Error fetching queries:", error);
+           
             } finally {
-                  setLoading(false);
+                  setLoadingQueries(false);
             }
       };
 
       useEffect(() => {
-            fetchQueries();
-      }, []);
+            if (user && (user.role === "ADMIN" || user.role === "SUPER_ADMIN")) {
+                  fetchQueries();
+            }
+      }, [user]);
 
       const filteredQueries = useMemo(() => {
-            return queries.filter(query =>
-                  (query.name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                  (query.email?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                  (query.company?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                  (query.interested_in?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                  (query.contact?.toLowerCase().includes(searchTerm.toLowerCase()))
-            );
-      }, [queries, searchTerm]);
+            return queries.filter(query => {
+                  const matchesSearch = 
+                        (query.name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                        (query.email?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                        (query.company?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                        (query.interested_in?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                        (query.contact?.toLowerCase().includes(searchTerm.toLowerCase()));
+                  
+                  const matchesStatus = statusFilter === "all" || query.status === statusFilter;
+                  
+                  return matchesSearch && matchesStatus;
+            });
+      }, [queries, searchTerm, statusFilter]);
 
       const totalPages = Math.ceil(filteredQueries.length / itemsPerPage);
       const startIndex = (currentPage - 1) * itemsPerPage;
@@ -109,10 +129,8 @@ export default function QueriesPage() {
                               )
                         );
                   } else {
-                        console.error("Failed to update status");
                   }
             } catch (error) {
-                  console.error("Error updating status:", error);
             }
       };
 
@@ -131,16 +149,49 @@ export default function QueriesPage() {
             }
       };
 
+      if (loading || !user) {
+            return (
+                  <div className="flex items-center justify-center min-h-screen bg-white">
+                        <p className="text-gray-900">Loading...</p>
+                  </div>
+            );
+      }
+
+      if (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN") {
+            return (
+                  <div className="flex items-center justify-center min-h-screen bg-white">
+                        <p className="text-gray-900">Access denied. Redirecting...</p>
+                  </div>
+            );
+      }
+
       return (
             <div>
                   <div className="mb-6 flex items-center justify-between">
                         <h1 className="text-4xl font-bold mb-2">Queries</h1>
-                        <button
-                              onClick={fetchQueries}
-                              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                        >
-                              Refresh Data
-                        </button>
+                        <div className="flex items-center gap-4">
+                              <select
+                                    value={statusFilter}
+                                    onChange={(e) => {
+                                          setStatusFilter(e.target.value);
+                                          setCurrentPage(1);
+                                    }}
+                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--neon-cyan)]"
+                              >
+                                    <option value="all">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="ACTIVE">Active</option>
+                                    <option value="CONNECTED">Connected</option>
+                                    <option value="LOST">Lost</option>
+                                    <option value="CONVERT">Convert</option>
+                              </select>
+                              <button
+                                    onClick={fetchQueries}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                              >
+                                    Refresh Data
+                              </button>
+                        </div>
                   </div>
 
                   <div className="mb-6 relative">
@@ -157,7 +208,7 @@ export default function QueriesPage() {
                         <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   </div>
 
-                  {loading ? (
+                  {loadingQueries ? (
                         <p>Loading queries...</p>
                   ) : (
                         <>

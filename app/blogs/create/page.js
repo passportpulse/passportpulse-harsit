@@ -171,7 +171,6 @@ export default function CreateBlogPage() {
                   }
             } catch (err) {
                   setError(err.response?.data?.message || "Failed to create blog post. Please try again.");
-                  console.error(err);
             } finally {
                   setLoading(false);
             }

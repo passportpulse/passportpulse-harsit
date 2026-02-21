@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
                         setUser(null);
                   }
             } catch (error) {
-                  console.error("Failed to fetch user data:", error);
                   localStorage.removeItem("accessToken");
                   setUser(null);
             } finally {
@@ -47,7 +46,6 @@ export const AuthProvider = ({ children }) => {
       useEffect(() => {
             const timeout = setTimeout(() => {
                   if (loading) {
-                        console.warn('Authentication taking too long, forcing stop');
                         setLoading(false);
                   }
             }, 5000); // 5 second timeout
@@ -80,11 +78,9 @@ export const AuthProvider = ({ children }) => {
                         
                         return response.data;
                   } else {
-                        console.log('Login failed:', response.data.message);
                         return { success: false, message: response.data.message };
                   }
             } catch (dbError) {
-                  console.error('Database login failed:', dbError);
                   setLoading(false);
                   return { success: false, message: "Login failed - Database error" };
             }
@@ -119,7 +115,6 @@ export const AuthProvider = ({ children }) => {
                         return response.data;
                   }
             } catch (error) {
-                  console.error("Registration error:", error);
                   setLoading(false);
                   return { success: false, message: error.response?.data?.message || "Registration failed" };
             }

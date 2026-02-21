@@ -27,7 +27,6 @@ export async function PUT(request, { params }) {
     const body = await request.json();
     const { status } = body;
     
-    console.log('PUT request received:', { queryId: id, status });
     
     // Validate status
     const validStatuses = ['pending', 'ACTIVE', 'CONNECTED', 'LOST', 'CONVERT'];
@@ -44,15 +43,12 @@ export async function PUT(request, { params }) {
     
     // First, let's see what queries exist
     const allQueries = await queriesCollection.find({}).toArray();
-    console.log('Total queries in DB:', allQueries.length);
-    console.log('First query ID:', allQueries[0]?._id);
-    console.log('Looking for ID:', id);
+   
     
     // Try with ObjectId first, then with string
     let result;
     try {
       const objectId = new ObjectId(id);
-      console.log('Trying with ObjectId:', objectId);
       result = await queriesCollection.updateOne(
         { _id: objectId },
         { 
@@ -62,9 +58,7 @@ export async function PUT(request, { params }) {
           }
         }
       );
-      console.log('ObjectId update result:', result);
     } catch (objectIdError) {
-      console.log('ObjectId failed, trying with string ID:', objectIdError.message);
       // If ObjectId fails, try with string ID
       result = await queriesCollection.updateOne(
         { id: id },
@@ -75,7 +69,6 @@ export async function PUT(request, { params }) {
           }
         }
       );
-      console.log('String ID update result:', result);
     }
     
     if (result.matchedCount === 0) {
@@ -84,12 +77,7 @@ export async function PUT(request, { params }) {
         { status: 404 }
       );
     }
-    
-    console.log('Database: Query status updated:', {
-      queryId: id,
-      status: status,
-      updatedAt: new Date()
-    });
+  
     
     // Get updated query
     let updatedQuery;
@@ -109,7 +97,6 @@ export async function PUT(request, { params }) {
     );
     
   } catch (error) {
-    console.error('Database status update error:', error);
     return NextResponse.json(
       { 
         success: false, 

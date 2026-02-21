@@ -52,12 +52,7 @@ export async function POST(request) {
     // Store user in database
     const result = await usersCollection.insertOne(newUser);
     
-    console.log('Database: New user registered:', {
-      id: result.insertedId,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role
-    });
+ 
     
     // Return with database ID
     const responseData = {
@@ -76,7 +71,6 @@ export async function POST(request) {
     );
     
   } catch (error) {
-    console.error('Database registration error:', error);
     return NextResponse.json(
       { 
         success: false, 

@@ -27,12 +27,7 @@ export async function POST(request) {
     // Store contact
     adminContacts.push(newContact);
     
-    console.log('Admin: New contact added:', {
-      id: newContact.id,
-      name: newContact.name,
-      email: newContact.email,
-      status: newContact.status
-    });
+  
     
     return NextResponse.json(
       { 
@@ -44,7 +39,6 @@ export async function POST(request) {
     );
     
   } catch (error) {
-    console.error('Admin contacts API error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -80,7 +74,6 @@ export async function GET() {
     );
     
   } catch (error) {
-    console.error('Error fetching admin contacts:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -134,7 +127,6 @@ export async function PUT(request) {
     );
     
   } catch (error) {
-    console.error('Error updating contact status:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -183,7 +175,6 @@ export async function DELETE(request) {
     );
     
   } catch (error) {
-    console.error('Error deleting contact:', error);
     return NextResponse.json(
       { 
         success: false, 

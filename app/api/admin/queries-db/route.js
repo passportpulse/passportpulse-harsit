@@ -46,13 +46,7 @@ export async function POST(request) {
     // Store query in database
     const result = await queriesCollection.insertOne(newQuery);
     
-    console.log('Database: New query added:', {
-      id: result.insertedId,
-      name: newQuery.name,
-      email: newQuery.email,
-      interested_in: newQuery.interested_in,
-      priority: newQuery.priority
-    });
+
     
     // Return with database ID
     const responseData = {
@@ -71,7 +65,6 @@ export async function POST(request) {
     );
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -85,12 +78,15 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
+    
     // Connect to database
     const database = await connectToDatabase();
     const queriesCollection = database.collection('queries');
     
+    
     // Fetch all queries from database
     const queries = await queriesCollection.find({}).sort({ createdAt: -1 }).toArray();
+    
     
     // Convert ObjectId to string for JSON serialization
     const formattedQueries = queries.map(query => ({
@@ -110,16 +106,18 @@ export async function GET(request) {
       low: formattedQueries.filter(q => q.priority === 'low').length
     };
     
-    return NextResponse.json({
+    const response = {
       success: true,
       message: 'Queries retrieved successfully from database',
       data: formattedQueries,
       total: formattedQueries.length,
       stats
-    });
+    };
+    
+    
+    return NextResponse.json(response);
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -165,7 +163,6 @@ export async function PUT(request) {
     });
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -202,7 +199,6 @@ export async function DELETE(request) {
     });
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
+import bcrypt from 'bcryptjs';
 
 // MongoDB connection
 const mongoUrl = "mongodb+srv://mypassportpulse_db_user:K4rGDFUP1zjXQl3U@passportpulse.p9dfwxn.mongodb.net/passportpulse?retryWrites=true&w=majority&appName=passportpulse";
@@ -19,10 +20,8 @@ async function connectToDatabase() {
     
     await client.connect();
     db = client.db('passportpulse');
-    console.log('Database connected successfully');
     return db;
   } catch (error) {
-    console.error('Database connection error:', error);
     throw error;
   }
 }
@@ -61,8 +60,10 @@ export async function POST(request) {
       );
     }
     
-    // Check password (in production, you should hash and compare)
-    if (user.password !== password) {
+    // Check password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+    if (!isPasswordValid) {
       return NextResponse.json(
         { success: false, message: 'Invalid password' },
         { status: 401 }
@@ -85,7 +86,6 @@ export async function POST(request) {
     });
     
   } catch (error) {
-    console.error('Database login error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -154,7 +154,6 @@ export async function GET(request) {
     });
     
   } catch (error) {
-    console.error('Database get user error:', error);
     return NextResponse.json(
       { 
         success: false, 

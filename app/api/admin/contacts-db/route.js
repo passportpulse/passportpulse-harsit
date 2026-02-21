@@ -46,12 +46,7 @@ export async function POST(request) {
     // Store contact in database
     const result = await contactsCollection.insertOne(newContact);
     
-    console.log('Database: New contact added:', {
-      id: result.insertedId,
-      name: newContact.name,
-      email: newContact.email,
-      company: newContact.company
-    });
+
     
     // Return with database ID
     const responseData = {
@@ -70,7 +65,6 @@ export async function POST(request) {
     );
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -117,7 +111,6 @@ export async function GET(request) {
     });
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -162,7 +155,6 @@ export async function PUT(request) {
     });
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -199,7 +191,6 @@ export async function DELETE(request) {
     });
     
   } catch (error) {
-    console.error('Database error:', error);
     return NextResponse.json(
       { 
         success: false, 

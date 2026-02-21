@@ -3,13 +3,23 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext';
+import { useRouter } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
 export default function UserManagement() {
+      const { user: loggedInUser, loading } = useAuth();
+      const router = useRouter();
       const [users, setUsers] = useState([]);
-      const [loading, setLoading] = useState(true);
-      const { user: loggedInUser } = useAuth(); // বর্তমানে লগইন করা অ্যাডমিনের তথ্য নিন
+      const [loadingUsers, setLoading] = useState(true);
+
+      useEffect(() => {
+            if (!loading && !loggedInUser) {
+                  router.push('/login');
+            } else if (!loading && loggedInUser && loggedInUser.role !== "ADMIN" && loggedInUser.role !== "SUPER_ADMIN") {
+                  router.push('/');
+            }
+      }, [loggedInUser, loading, router]);
 
       const fetchUsers = async () => {
             setLoading(true);
@@ -20,15 +30,16 @@ export default function UserManagement() {
                   });
                   setUsers(response.data.data);
             } catch (error) {
-                  console.error("Failed to fetch users:", error);
             } finally {
                   setLoading(false);
             }
       };
 
       useEffect(() => {
-            fetchUsers();
-      }, []);
+            if (loggedInUser && (loggedInUser.role === "ADMIN" || loggedInUser.role === "SUPER_ADMIN")) {
+                  fetchUsers();
+            }
+      }, [loggedInUser]);
 
       const handleRoleChange = async (id, newRole) => {
             try {
@@ -40,7 +51,6 @@ export default function UserManagement() {
                   );
                   fetchUsers();
             } catch (error) {
-                  console.error("Failed to update role:", error);
             }
       };
 
@@ -53,10 +63,25 @@ export default function UserManagement() {
                         });
                         fetchUsers();
                   } catch (error) {
-                        console.error("Failed to delete user:", error);
                   }
             }
       };
+
+      if (loading || !loggedInUser) {
+            return (
+                  <div className="flex items-center justify-center min-h-screen bg-white">
+                        <p className="text-gray-900">Loading...</p>
+                  </div>
+            );
+      }
+
+      if (loggedInUser.role !== "ADMIN" && loggedInUser.role !== "SUPER_ADMIN") {
+            return (
+                  <div className="flex items-center justify-center min-h-screen bg-white">
+                        <p className="text-gray-900">Access denied. Redirecting...</p>
+                  </div>
+            );
+      }
 
       return (
             <div>
@@ -72,7 +97,7 @@ export default function UserManagement() {
                                     </tr>
                               </thead>
                               <tbody>
-                                    {loading ? (
+                                    {loadingUsers ? (
                                           <tr><td colSpan="4" className="p-4 text-center">Loading users...</td></tr>
                                     ) : (
                                           users.map(user => (

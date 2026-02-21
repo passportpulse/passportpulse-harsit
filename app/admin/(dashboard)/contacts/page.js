@@ -11,10 +11,15 @@ export default function ContactsPage() {
     const [contacts, setContacts] = useState([]);
     const [loadingContacts, setLoadingContacts] = useState(true);
     const [error, setError] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
 
     useEffect(() => {
-        if (!loading && (!user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN"))) {
+    
+        
+        if (!loading && !user) {
             router.push('/login');
+        } else if (!loading && user && user.role !== "ADMIN" && user.role !== "SUPER_ADMIN") {
+            router.push('/');
         }
     }, [user, loading, router]);
 
@@ -33,12 +38,16 @@ export default function ContactsPage() {
                 setError("Failed to fetch contacts");
             }
         } catch (error) {
-            console.error("Error fetching contacts:", error);
             setError("Error fetching contacts");
         } finally {
             setLoadingContacts(false);
         }
     };
+
+    const filteredContacts = contacts.filter(contact => {
+        if (statusFilter === "all") return true;
+        return contact.status === statusFilter;
+    });
 
     const updateContactStatus = async (contactId, newStatus) => {
         try {
@@ -56,7 +65,6 @@ export default function ContactsPage() {
                 alert("Failed to update contact status");
             }
         } catch (error) {
-            console.error("Error updating contact status:", error);
             alert("Error updating contact status");
         }
     };
@@ -72,25 +80,48 @@ export default function ContactsPage() {
                 alert("Failed to delete contact");
             }
         } catch (error) {
-            console.error("Error deleting contact:", error);
             alert("Error deleting contact");
         }
     };
 
-    if (loading || !user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN")) {
+    if (loading || !user) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-white">
-                <p className="text-gray-900">Loading or redirecting...</p>
+                <p className="text-gray-900">Loading...</p>
+            </div>
+        );
+    }
+
+    if (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN") {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-white">
+                <p className="text-gray-900">Access denied. Redirecting...</p>
             </div>
         );
     }
 
     return (
         <div className="p-6">
-            <div className="mb-6">
+            <div className="mb-6 flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Contact Submissions</h1>
-                <p className="text-gray-600">Manage contact form submissions from potential clients</p>
+                <div className="flex items-center gap-4">
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--neon-cyan)]"
+                    >
+                        <option value="all">All Status</option>
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
             </div>
+            <p className="text-gray-600 mb-6">
+                Manage contact form submissions from potential clients
+            </p>
 
             {error && (
                 <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -103,9 +134,9 @@ export default function ContactsPage() {
                     <div className="p-8 text-center">
                         <p className="text-gray-500">Loading contacts...</p>
                     </div>
-                ) : contacts.length === 0 ? (
+                ) : filteredContacts.length === 0 ? (
                     <div className="p-8 text-center">
-                        <p className="text-gray-500">No contact submissions yet</p>
+                        <p className="text-gray-500">No contact submissions found</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -139,7 +170,7 @@ export default function ContactsPage() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {contacts.map((contact) => (
+                                {filteredContacts.map((contact) => (
                                     <tr key={contact.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm font-medium text-gray-900">{contact.name}</div>
@@ -190,7 +221,7 @@ export default function ContactsPage() {
             </div>
 
             <div className="mt-4 text-sm text-gray-500">
-                Total: {contacts.length} contact{contacts.length !== 1 ? 's' : ''}
+                Total: {filteredContacts.length} contact{filteredContacts.length !== 1 ? 's' : ''}
             </div>
         </div>
     );

@@ -57,23 +57,19 @@ export default function AdminDashboard() {
       useEffect(() => {
             const fetchDashboardData = async () => {
                   try {
-                        console.log('Fetching dashboard data...');
                         
                         const [contactsRes, queriesRes] = await Promise.all([
                               axios.get('/api/admin/contacts-db'),
                               axios.get('/api/admin/queries-db')
                         ]);
 
-                        console.log('Contacts response:', contactsRes.data);
-                        console.log('Queries response:', queriesRes.data);
 
                         const contactsData = contactsRes.data.data || [];
                         const queriesData = queriesRes.data.data || [];
                         const contactsStats = contactsRes.data.stats || {};
                         const queriesStats = queriesRes.data.stats || {};
 
-                        console.log('Contacts data:', contactsData);
-                        console.log('Queries data:', queriesData);
+                     
 
                         // Combine recent activities
                         const allActivities = [
@@ -96,13 +92,10 @@ export default function AdminDashboard() {
                               newQueries: queriesStats.pending || 0
                         };
 
-                        console.log('Setting stats:', newStats);
-                        console.log('Setting activities:', allActivities);
 
                         setStats(newStats);
                         setRecentActivities(allActivities);
                   } catch (error) {
-                        console.error("Failed to fetch dashboard data:", error);
                   } finally {
                         setLoading(false);
                   }

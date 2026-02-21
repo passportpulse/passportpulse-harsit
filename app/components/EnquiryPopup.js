@@ -35,7 +35,6 @@ const EnquiryForm = ({ onClose }) => {
                 setFormStatus("Failed to send message.");
             }
         } catch (error) {
-            console.error("Form submission error:", error);
             setFormStatus(error.response?.data?.message || "An error occurred.");
         }
     };

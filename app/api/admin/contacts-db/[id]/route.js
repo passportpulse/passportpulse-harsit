@@ -27,7 +27,6 @@ export async function PUT(request, { params }) {
     const body = await request.json();
     const { status } = body;
     
-    console.log('PUT request received for contacts:', { contactId: id, status });
     
     // Validate status
     const validStatuses = ['new', 'contacted', 'in-progress', 'completed', 'closed'];
@@ -44,15 +43,12 @@ export async function PUT(request, { params }) {
     
     // First, let's see what contacts exist
     const allContacts = await contactsCollection.find({}).toArray();
-    console.log('Total contacts in DB:', allContacts.length);
-    console.log('First contact ID:', allContacts[0]?._id);
-    console.log('Looking for ID:', id);
+   
     
     // Try with ObjectId first, then with string
     let result;
     try {
       const objectId = new ObjectId(id);
-      console.log('Trying with ObjectId:', objectId);
       result = await contactsCollection.updateOne(
         { _id: objectId },
         { 
@@ -62,9 +58,7 @@ export async function PUT(request, { params }) {
           }
         }
       );
-      console.log('ObjectId update result:', result);
     } catch (objectIdError) {
-      console.log('ObjectId failed, trying with string ID:', objectIdError.message);
       // If ObjectId fails, try with string ID
       result = await contactsCollection.updateOne(
         { id: id },
@@ -75,7 +69,6 @@ export async function PUT(request, { params }) {
           }
         }
       );
-      console.log('String ID update result:', result);
     }
     
     if (result.matchedCount === 0) {
@@ -85,11 +78,7 @@ export async function PUT(request, { params }) {
       );
     }
     
-    console.log('Database: Contact status updated:', {
-      contactId: id,
-      status: status,
-      updatedAt: new Date()
-    });
+
     
     // Get updated contact
     let updatedContact;
@@ -109,7 +98,6 @@ export async function PUT(request, { params }) {
     );
     
   } catch (error) {
-    console.error('Database status update error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -125,7 +113,6 @@ export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
     
-    console.log('DELETE request received for contacts:', { contactId: id });
     
     // Connect to database
     const database = await connectToDatabase();
@@ -135,14 +122,10 @@ export async function DELETE(request, { params }) {
     let result;
     try {
       const objectId = new ObjectId(id);
-      console.log('Trying to delete with ObjectId:', objectId);
       result = await contactsCollection.deleteOne({ _id: objectId });
-      console.log('ObjectId delete result:', result);
     } catch (objectIdError) {
-      console.log('ObjectId failed, trying with string ID:', objectIdError.message);
       // If ObjectId fails, try with string ID
       result = await contactsCollection.deleteOne({ id: id });
-      console.log('String ID delete result:', result);
     }
     
     if (result.deletedCount === 0) {
@@ -152,10 +135,7 @@ export async function DELETE(request, { params }) {
       );
     }
     
-    console.log('Database: Contact deleted successfully:', {
-      contactId: id,
-      deletedCount: result.deletedCount
-    });
+
     
     return NextResponse.json(
       { 
@@ -166,7 +146,6 @@ export async function DELETE(request, { params }) {
     );
     
   } catch (error) {
-    console.error('Database delete error:', error);
     return NextResponse.json(
       { 
         success: false, 

@@ -20,7 +20,6 @@ const MyBlogs = () => {
             });
             setBlogs(response.data.data);
         } catch (error) {
-            console.error("Failed to fetch my blogs:", error);
         } finally {
             setLoading(false);
         }
@@ -39,7 +38,6 @@ const MyBlogs = () => {
                 });
                 fetchMyBlogs();
             } catch (error) {
-                console.error("Failed to delete blog:", error);
             }
         }
     };

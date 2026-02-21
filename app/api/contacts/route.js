@@ -34,7 +34,6 @@ export async function POST(request) {
     // Add to mock database
     contacts.push(newContact);
     
-    console.log('New contact submission:', newContact);
     
     return NextResponse.json(
       { 
@@ -46,7 +45,6 @@ export async function POST(request) {
     );
     
   } catch (error) {
-    console.error('Error submitting contact form:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
       { status: 500 }
@@ -72,7 +70,6 @@ export async function GET() {
     );
     
   } catch (error) {
-    console.error('Error fetching contacts:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
       { status: 500 }
