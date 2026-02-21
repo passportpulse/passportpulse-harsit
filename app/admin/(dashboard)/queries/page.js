@@ -113,6 +113,25 @@ export default function QueriesPage() {
             }
       };
 
+      const handleDeleteQuery = async (queryId) => {
+            if (window.confirm('Are you sure you want to delete this query?')) {
+                  try {
+                        const response = await axios.delete(`/api/admin/queries-db?id=${queryId}`);
+                        
+                        if (response.data.success) {
+                              // Remove from local state
+                              setQueries(prevQueries => 
+                                    prevQueries.filter(query => query._id !== queryId)
+                              );
+                        } else {
+                              alert('Failed to delete query');
+                        }
+                  } catch (error) {
+                        alert('Error deleting query');
+                  }
+            }
+      };
+
       const handleStatusChange = async (queryId, newStatus) => {
             try {
                   const response = await axios.put(`/api/admin/queries-db/${queryId}`, {
@@ -137,15 +156,15 @@ export default function QueriesPage() {
       const getStatusColor = (status) => {
             switch (status) {
                   case 'ACTIVE':
-                        return 'bg-blue-100 text-blue-800';
+                        return `bg-blue-100 text-blue-800`;
                   case 'CONNECTED':
-                        return 'bg-green-100 text-green-800';
+                        return `bg-green-100 text-green-800`;
                   case 'LOST':
-                        return 'bg-red-100 text-red-800';
+                        return `bg-red-100 text-red-800`;
                   case 'CONVERT':
-                        return 'bg-purple-100 text-purple-800';
+                        return `bg-purple-100 text-purple-800`;
                   default:
-                        return 'bg-gray-100 text-gray-800';
+                        return `bg-gray-100 text-gray-800`;
             }
       };
 
@@ -258,16 +277,22 @@ export default function QueriesPage() {
                                                                   <td className="p-4">
                                                                         <button
                                                                               onClick={() => setSelectedQuery(query)}
-                                                                              className="px-3 py-1 bg-[var(--neon-cyan)] text-black text-sm font-semibold rounded-md hover:bg-opacity-80 transition-colors"
+                                                                              className="px-3 py-1 bg-[var(--neon-cyan)] text-black text-sm font-semibold rounded-md hover:bg-opacity-80 transition-colors mr-2"
                                                                         >
                                                                               View
+                                                                        </button>
+                                                                        <button
+                                                                              onClick={() => handleDeleteQuery(query._id)}
+                                                                              className="px-3 py-1 bg-red-500 text-white text-sm font-semibold rounded-md hover:bg-red-600 transition-colors"
+                                                                        >
+                                                                              Delete
                                                                         </button>
                                                                   </td>
                                                             </tr>
                                                       )) : (
                                                             <tr>
-                                                                  <td colSpan="8" className="p-4 text-center text-gray-500">
-                                                                        {searchTerm ? 'No queries match your search.' : 'No queries found.'}
+                                                                  <td colSpan="8" className="p-8 text-center text-gray-500">
+                                                                        No queries found matching your criteria.
                                                                   </td>
                                                             </tr>
                                                       )}

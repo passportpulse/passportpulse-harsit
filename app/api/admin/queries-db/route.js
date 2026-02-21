@@ -183,8 +183,15 @@ export async function DELETE(request) {
     const database = await connectToDatabase();
     const queriesCollection = database.collection('queries');
     
-    // Delete query from database
-    const result = await queriesCollection.deleteOne({ _id: new ObjectId(id) });
+    // Try with ObjectId first, then with string
+    let result;
+    try {
+      const objectId = new ObjectId(id);
+      result = await queriesCollection.deleteOne({ _id: objectId });
+    } catch (objectIdError) {
+      // If ObjectId fails, try with string ID
+      result = await queriesCollection.deleteOne({ id: id });
+    }
     
     if (result.deletedCount === 0) {
       return NextResponse.json(
