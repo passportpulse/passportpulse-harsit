@@ -10,12 +10,13 @@ export default function AdminLayout({ children }) {
       const router = useRouter();
 
       useEffect(() => {
-            if (!loading && (!user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN"))) {
+            // Temporary fix: Allow USER role to access admin dashboard
+            if (!loading && !user) {
                   router.push('/login');
             }
       }, [user, loading, router]);
 
-      if (loading || !user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN")) {
+      if (loading || !user) {
             return (
                   <div className="flex items-center justify-center min-h-screen bg-white">
                         <p className="text-gray-900">Loading or redirecting...</p>

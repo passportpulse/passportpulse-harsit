@@ -27,21 +27,8 @@ export const AuthProvider = ({ children }) => {
                   }
             } catch (error) {
                   console.error("Failed to fetch user data:", error);
-                  // If database API fails, try mock token
-                  if (token === "mock_access_token_12345") {
-                        const mockAdminUser = {
-                              _id: "mock_admin_id_12345",
-                              name: "Admin User",
-                              email: "admin@passportpulse.com",
-                              role: "SUPER_ADMIN",
-                              createdAt: new Date(),
-                              updatedAt: new Date()
-                        };
-                        setUser(mockAdminUser);
-                  } else {
-                        localStorage.removeItem("accessToken");
-                        setUser(null);
-                  }
+                  localStorage.removeItem("accessToken");
+                  setUser(null);
             } finally {
                   setLoading(false);
             }
@@ -71,7 +58,7 @@ export const AuthProvider = ({ children }) => {
       const login = async (email, password) => {
             setLoading(true);
             
-            // Try database login first
+            // Database-only authentication
             try {
                   const response = await axios.post('/api/auth-db', {
                         email,
@@ -83,40 +70,24 @@ export const AuthProvider = ({ children }) => {
                         localStorage.setItem("accessToken", token);
                         setUser(response.data.data.user);
                         
+                        // Check if user has admin role (either ADMIN or SUPER_ADMIN)
                         const userRole = response.data.data.user.role;
-                        if (userRole === "SUPER_ADMIN" || userRole === "ADMIN") {
+                        if (["ADMIN", "SUPER_ADMIN"].includes(userRole)) {
                               router.push("/admin");
                         } else {
                               router.push("/");
                         }
                         
                         return response.data;
+                  } else {
+                        console.log('Login failed:', response.data.message);
+                        return { success: false, message: response.data.message };
                   }
             } catch (dbError) {
-                  console.log('Database login failed, trying mock login...');
-            }
-            
-            // Fallback to mock admin login
-            if (email === "admin@passportpulse.com" && password === "admin123456") {
-                  const mockAdminUser = {
-                        _id: "mock_admin_id_12345",
-                        name: "Admin User",
-                        email: "admin@passportpulse.com",
-                        role: "SUPER_ADMIN",
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                  };
-                  const mockToken = "mock_access_token_12345";
-                  
-                  localStorage.setItem("accessToken", mockToken);
-                  setUser(mockAdminUser);
+                  console.error('Database login failed:', dbError);
                   setLoading(false);
-                  router.push("/admin");
-                  return { success: true, data: { user: mockAdminUser, accessToken: mockToken } };
+                  return { success: false, message: "Login failed - Database error" };
             }
-            
-            setLoading(false);
-            return { success: false, message: "Login failed" };
       };
 
       const register = async (name, email, password) => {
