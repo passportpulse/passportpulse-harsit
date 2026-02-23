@@ -59,7 +59,6 @@ export default function ContactUs() {
                  setFormStatus("Failed to send message. Please try again.");
             }
         } catch (error) {
-            console.error("Form submission error:", error);
             setFormStatus(error.response?.data?.message || "An error occurred.");
         }
     };

@@ -36,7 +36,6 @@ const ChangePassword = () => {
             setConfirmPassword('');
         } catch (error) {
             setMessage('Failed to change password.');
-            console.error(error);
         } finally {
             setLoading(false);
         }

@@ -55,7 +55,6 @@ const ProfileSettings = () => {
                   }
             } catch (error) {
                   setMessage('Failed to update profile.');
-                  console.error(error);
             } finally {
                   setLoading(false);
             }

@@ -86,11 +86,13 @@ export async function POST(request) {
     });
     
   } catch (error) {
+    console.error('Auth DB Error:', error);
     return NextResponse.json(
       { 
         success: false, 
         message: 'Login failed',
-        error: error.message
+        error: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
       { status: 500 }
     );

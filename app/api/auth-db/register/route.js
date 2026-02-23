@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
+import bcrypt from 'bcryptjs';
 
 // MongoDB connection
 const mongoUrl = "mongodb+srv://mypassportpulse_db_user:K4rGDFUP1zjXQl3U@passportpulse.p9dfwxn.mongodb.net/passportpulse?retryWrites=true&w=majority&appName=passportpulse";
@@ -12,13 +13,17 @@ async function connectToDatabase() {
     return db;
   }
   
-  client = new MongoClient(mongoUrl, {
-    serverApi: ServerApiVersion.v1,
-  });
-  
-  await client.connect();
-  db = client.db('passportpulse');
-  return db;
+  try {
+    client = new MongoClient(mongoUrl, {
+      serverApi: ServerApiVersion.v1,
+    });
+    
+    await client.connect();
+    db = client.db('passportpulse');
+    return db;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function POST(request) {
@@ -26,8 +31,24 @@ export async function POST(request) {
     const body = await request.json();
     const { name, email, password } = body;
     
+    // Validate input
+    if (!name || !email || !password) {
+      return NextResponse.json(
+        { success: false, message: 'Name, email, and password are required' },
+        { status: 400 }
+      );
+    }
+    
     // Connect to database
     const database = await connectToDatabase();
+    
+    if (!database) {
+      return NextResponse.json(
+        { success: false, message: 'Database connection failed' },
+        { status: 500 }
+      );
+    }
+    
     const usersCollection = database.collection('users');
     
     // Check if user already exists
@@ -35,15 +56,18 @@ export async function POST(request) {
     if (existingUser) {
       return NextResponse.json(
         { success: false, message: 'User already exists' },
-        { status: 400 }
+        { status: 409 }
       );
     }
+    
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
     
     // Create new user
     const newUser = {
       name: name?.trim() || '',
       email: email?.trim().toLowerCase() || '',
-      password: password, // You should hash this in production
+      password: hashedPassword,
       role: "USER",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -52,12 +76,12 @@ export async function POST(request) {
     // Store user in database
     const result = await usersCollection.insertOne(newUser);
     
- 
+    // Remove password from response
+    const { password: _, ...userWithoutPassword } = newUser;
     
     // Return with database ID
     const responseData = {
-      ...newUser,
-      id: result.insertedId.toString(),
+      ...userWithoutPassword,
       _id: result.insertedId.toString()
     };
     
@@ -71,11 +95,13 @@ export async function POST(request) {
     );
     
   } catch (error) {
+    console.error('Registration Error:', error);
     return NextResponse.json(
       { 
         success: false, 
         message: 'Failed to register user',
-        error: error.message
+        error: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
       { status: 500 }
     );

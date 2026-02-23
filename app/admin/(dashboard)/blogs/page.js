@@ -24,7 +24,6 @@ export default function BlogManagement() {
                   });
                   setBlogs(response.data.data);
             } catch (error) {
-                  console.error("Failed to fetch blogs:", error);
             } finally {
                   setLoading(false);
             }
@@ -44,7 +43,6 @@ export default function BlogManagement() {
                   );
                   fetchBlogs();
             } catch (error) {
-                  console.error("Failed to update status:", error);
             }
       };
 
@@ -57,7 +55,6 @@ export default function BlogManagement() {
                         });
                         fetchBlogs();
                   } catch (error) {
-                        console.error("Failed to delete blog:", error);
                   }
             }
       };
