@@ -15,11 +15,11 @@ const Sidebar = () => {
       ];
 
       const contactItems = [
-            { href: '/admin/contacts', icon: FaUsers, label: 'Contacts' },
+            { href: '/admin/contacts', icon: FaUsers, label: 'Leads' },
       ];
 
       const queryItems = [
-            { href: '/admin/queries', icon: FaQuestionCircle, label: 'Queries' },
+            { href: '/admin/queries', icon: FaQuestionCircle, label: 'System Leads' },
       ];
 
       return (
@@ -50,7 +50,7 @@ const Sidebar = () => {
 
                         {/* Contacts Section */}
                         <div>
-                              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Contacts</h3>
+                              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Leads</h3>
                               {contactItems.map(item => (
                                     <Link
                                           key={item.href}
@@ -68,7 +68,7 @@ const Sidebar = () => {
 
                         {/* Queries Section */}
                         <div>
-                              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Queries</h3>
+                              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">System Leads</h3>
                               {queryItems.map(item => (
                                     <Link
                                           key={item.href}
