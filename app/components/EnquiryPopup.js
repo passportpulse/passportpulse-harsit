@@ -22,7 +22,7 @@ const EnquiryForm = ({ onClose }) => {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/contacts`,
+                '/api/admin/contacts-db',
                 formData
             );
             if (response.data.success) {

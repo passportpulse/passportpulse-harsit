@@ -113,10 +113,16 @@ export default function ContactsPage() {
                         <option value="all">All Status</option>
                         <option value="new">New</option>
                         <option value="contacted">Contacted</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                        <option value="closed">Closed</option>
+                        <option value="qualified">Qualified</option>
+                        <option value="converted">Converted</option>
+                        <option value="lost">Lost</option>
                     </select>
+                    <button
+                        onClick={fetchContacts}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                        Refresh Data
+                    </button>
                 </div>
             </div>
             <p className="text-gray-600 mb-6">
@@ -196,9 +202,9 @@ export default function ContactsPage() {
                                             >
                                                 <option value="new">New</option>
                                                 <option value="contacted">Contacted</option>
-                                                <option value="in-progress">In Progress</option>
-                                                <option value="completed">Completed</option>
-                                                <option value="closed">Closed</option>
+                                                <option value="qualified">Qualified</option>
+                                                <option value="converted">Converted</option>
+                                                <option value="lost">Lost</option>
                                             </select>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

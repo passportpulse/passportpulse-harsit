@@ -127,6 +127,15 @@ export async function PUT(request) {
     const body = await request.json();
     const { id, status } = body;
     
+    // Validate status
+    const validStatuses = ['new', 'contacted', 'qualified', 'converted', 'lost'];
+    if (status && !validStatuses.includes(status)) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid status' },
+        { status: 400 }
+      );
+    }
+    
     // Connect to database
     const database = await connectToDatabase();
     const contactsCollection = database.collection('contacts');

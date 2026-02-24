@@ -29,7 +29,7 @@ export async function PUT(request, { params }) {
     
     
     // Validate status
-    const validStatuses = ['new', 'contacted', 'in-progress', 'completed', 'closed'];
+    const validStatuses = ['new', 'contacted', 'qualified', 'converted', 'lost'];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
         { success: false, message: 'Invalid status' },

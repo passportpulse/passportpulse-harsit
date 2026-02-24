@@ -12,17 +12,18 @@ import FloatingButtons from "./FloatingButtons";
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
+  const isLoginPage = pathname === "/login";
   const { isEnquiryModalOpen, setIsEnquiryModalOpen } = useAuth();
 
   useEffect(() => {
     const popupShown = sessionStorage.getItem('popupShown');
-    if (!popupShown && !isAdminPage) {
+    if (!popupShown && !isAdminPage && !isLoginPage) {
         const timer = setTimeout(() => {
             setIsEnquiryModalOpen(true);
         }, 2500);
         return () => clearTimeout(timer);
     }
-  }, [isAdminPage, setIsEnquiryModalOpen]);
+  }, [isAdminPage, isLoginPage, setIsEnquiryModalOpen]);
 
   const handleClosePopup = () => {
     setIsEnquiryModalOpen(false);
@@ -40,7 +41,7 @@ export default function ClientLayout({ children }) {
       {!isAdminPage && <Footer />}
       {!isAdminPage && <FloatingButtons />}
       
-      {isEnquiryModalOpen && <EnquiryPopup onClose={handleClosePopup} />}
+      {isEnquiryModalOpen && !isAdminPage && !isLoginPage && <EnquiryPopup onClose={handleClosePopup} />}
     </>
   );
 }
