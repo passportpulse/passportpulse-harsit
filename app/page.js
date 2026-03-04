@@ -17,7 +17,7 @@ export default function Home() {
         <div className=""> <Hero /></div>
         
         {/* Services Banner */}
-     <div className="w-full">
+     {/* <div className="w-full">
   <Image
     src="/banner.png"
     alt="Services Banner"
@@ -27,7 +27,7 @@ export default function Home() {
     className="w-full h-auto"
     priority
   />
-</div>
+</div> */}
         <Services />
         <Process />
         <WhyChooseUs />
