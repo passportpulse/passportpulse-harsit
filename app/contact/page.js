@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
@@ -34,9 +35,50 @@ const FaqItem = ({ question, answer }) => {
 
 export default function ContactUs() {
     const [formStatus, setFormStatus] = useState("");
+    const [formStartTime, setFormStartTime] = useState(null);
+    const [mathCaptcha, setMathCaptcha] = useState({ num1: 0, num2: 0, userAnswer: '' });
+    const router = useRouter();
+
+    useEffect(() => {
+        setFormStartTime(Date.now());
+        // Generate random math CAPTCHA
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        setMathCaptcha({ num1, num2, userAnswer: '' });
+    }, []);
+
+    const regenerateCaptcha = () => {
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        setMathCaptcha({ ...mathCaptcha, num1, num2, userAnswer: '' });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Check if form was filled too quickly (bot indicator)
+        const timeSpent = Date.now() - formStartTime;
+        if (timeSpent < 3000) {
+            setFormStatus("Please slow down and fill the form properly.");
+            return;
+        }
+
+        // Check honeypot field (hidden from humans but visible to bots)
+        const honeypot = e.target.honeypot?.value;
+        if (honeypot) {
+            setFormStatus("Form submission blocked.");
+            return;
+        }
+
+        // Check math CAPTCHA
+        const correctAnswer = mathCaptcha.num1 + mathCaptcha.num2;
+        const userAnswer = parseInt(e.target.captcha_answer?.value);
+        if (!userAnswer || userAnswer !== correctAnswer) {
+            setFormStatus("Incorrect answer. Please try again.");
+            regenerateCaptcha();
+            return;
+        }
+
         setFormStatus("Sending...");
 
         const formData = {
@@ -44,6 +86,8 @@ export default function ContactUs() {
           email: e.target.email.value,
           interested_in: e.target.interested_in.value,
           message: e.target.message.value,
+          formTime: timeSpent,
+          timestamp: new Date().toISOString()
         };
 
         try {
@@ -55,6 +99,7 @@ export default function ContactUs() {
                 setFormStatus("Message sent successfully!");
                 setTimeout(() => setFormStatus(""), 5000);
                 e.target.reset();
+                setFormStartTime(Date.now()); // Reset timer for next submission
             } else {
                  setFormStatus("Failed to send message. Please try again.");
             }
@@ -131,6 +176,42 @@ export default function ContactUs() {
               <div>
                 <label htmlFor="message" className="text-sm font-semibold text-gray-400">Your Message</label>
                 <textarea id="message" name="message" rows="5" required className="mt-2 w-full p-3 rounded-lg bg-black/30 border border-white/10 resize-none focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white"></textarea>
+              </div>
+              {/* Honeypot field - hidden from humans but visible to bots */}
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="honeypot" className="text-sm font-semibold text-gray-400">Don't fill this</label>
+                <input 
+                  type="text" 
+                  id="honeypot" 
+                  name="honeypot" 
+                  tabIndex="-1" 
+                  autoComplete="off"
+                  className="mt-2 w-full p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white" 
+                />
+              </div>
+              {/* Math CAPTCHA */}
+              <div>
+                <label htmlFor="captcha_answer" className="text-sm font-semibold text-gray-400">
+                  Security Question: What is {mathCaptcha.num1} + {mathCaptcha.num2}?
+                </label>
+                <div className="flex gap-2 mt-2">
+                  <input 
+                    type="number" 
+                    id="captcha_answer" 
+                    name="captcha_answer" 
+                    required
+                    placeholder="Answer"
+                    className="flex-1 p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={regenerateCaptcha}
+                    className="px-4 py-3 text-sm font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors"
+                    title="Get new question"
+                  >
+                    🔄
+                  </button>
+                </div>
               </div>
               <div>
                 <button 

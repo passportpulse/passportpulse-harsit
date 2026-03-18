@@ -24,7 +24,27 @@ async function connectToDatabase() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, email, interested_in, message, status, priority } = body;
+    const { name, email, interested_in, message, status, priority, honeypot, formTime, timestamp } = body;
+    
+    // Bot protection checks
+    // Check honeypot field
+    if (honeypot && honeypot.trim() !== '') {
+      return NextResponse.json(
+        { success: false, message: 'Bot submission detected' },
+        { status: 400 }
+      );
+    }
+    
+    // Check form submission time (too fast = bot)
+    if (formTime && formTime < 3000) {
+      return NextResponse.json(
+        { success: false, message: 'Form submitted too quickly' },
+        { status: 400 }
+      );
+    }
+    
+    // Rate limiting check (optional - you can implement with Redis or database)
+    const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     
     // Connect to database
     const database = await connectToDatabase();
@@ -39,6 +59,9 @@ export async function POST(request) {
       interested_in: interested_in?.trim() || '',
       priority: priority || 'medium',
       status: status || 'pending',
+      clientIP: clientIP,
+      formTime: formTime || 0,
+      timestamp: timestamp || new Date().toISOString(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
