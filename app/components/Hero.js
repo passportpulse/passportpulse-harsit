@@ -16,6 +16,14 @@ const HeroForm = () => {
         e.preventDefault();
         setFormStatus("Sending...");
 
+        // Validate security answer
+        const securityAnswer = e.target.security_answer.value.trim();
+        if (securityAnswer !== "5") {
+            setFormStatus("Incorrect security answer. Please try again.");
+            setTimeout(() => setFormStatus(""), 3000);
+            return;
+        }
+
         const formData = {
             name: e.target.name.value,
             company: e.target.company.value,
@@ -109,6 +117,16 @@ const HeroForm = () => {
                         <option value="Business Automation">Business Automation</option>
                         <option value="Other">Other</option>
                     </select>
+                </div>
+                <div>
+                    <label className="text-white text-sm mb-1 block">Security Question: What is 2 + 3?</label>
+                    <input
+                        type="text"
+                        name="security_answer"
+                        required
+                        placeholder="Enter answer"
+                        className="w-full p-2.5 text-sm rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white"
+                    />
                 </div>
                 <button
                     type="submit"
