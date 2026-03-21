@@ -231,10 +231,7 @@ export default function ContactsPage() {
                                                       <tr>
                                                             <th className="p-4">Date</th>
                                                             <th className="p-4">Name</th>
-                                                             <th className="p-4">Address</th>
-                                                            <th className="p-4">Email</th>
                                                             <th className="p-4">Contact</th>
-                                                            <th className="p-4">Company</th>
                                                             <th className="p-4">Service</th>
                                                             <th className="p-4">Status</th>
                                                             <th className="p-4">Actions</th>
@@ -252,10 +249,7 @@ export default function ContactsPage() {
                                                                               
                                                                         </div>
                                                                   </td>
-                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.address && <div className="text-xs text-gray-500">{contact.address}</div>}</td>
-                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.email}</td>
                                                                   <td className="p-4 text-gray-600 whitespace-nowrap">{contact.contact || 'N/A'}</td>
-                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.company || 'N/A'}</td>
                                                                   <td className="p-4 text-gray-600 whitespace-nowrap">{contact.interested_in}</td>
                                                                   <td className="p-4">
                                                                         <select
@@ -270,7 +264,7 @@ export default function ContactsPage() {
                                                                               <option value="lost">Lost</option>
                                                                         </select>
                                                                   </td>
-                                                                  <td className=" flex gap-2 p-4">
+                                                                  <td className=" flex gap-1 p-4">
                                                                         <button
                                                                               onClick={() => setSelectedContact(contact)}
                                                                               className="px-3 py-1 bg-[var(--neon-cyan)] text-black text-sm font-semibold rounded-md hover:bg-opacity-80 transition-colors mr-2"

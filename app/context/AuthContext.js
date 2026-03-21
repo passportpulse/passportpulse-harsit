@@ -10,8 +10,40 @@ export const AuthProvider = ({ children }) => {
       const [user, setUser] = useState(null);
       const [loading, setLoading] = useState(true);
       const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false); 
+      const [lastActivity, setLastActivity] = useState(Date.now());
       const router = useRouter();
       const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+      // Auto-logout after 5 minutes of inactivity
+      useEffect(() => {
+            const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+            const checkInactivity = () => {
+                  const now = Date.now();
+                  if (now - lastActivity > INACTIVITY_TIMEOUT && user) {
+                        logout();
+                  }
+            };
+
+            const updateActivity = () => {
+                  setLastActivity(Date.now());
+            };
+
+            const interval = setInterval(checkInactivity, 60000); // Check every minute
+
+            // Add event listeners for user activity
+            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+            events.forEach(event => {
+                  document.addEventListener(event, updateActivity);
+            });
+
+            return () => {
+                  clearInterval(interval);
+                  events.forEach(event => {
+                        document.removeEventListener(event, updateActivity);
+                  });
+            };
+      }, [lastActivity, user]);
 
       const fetchMe = useCallback(async (token) => {
             setLoading(true);
@@ -67,6 +99,7 @@ export const AuthProvider = ({ children }) => {
                         const token = response.data.data.accessToken;
                         localStorage.setItem("accessToken", token);
                         setUser(response.data.data.user);
+                        setLastActivity(Date.now()); // Reset activity timer on login
                         
                         // Check if user has admin role (either ADMIN or SUPER_ADMIN)
                         const userRole = response.data.data.user.role;
