@@ -231,6 +231,7 @@ export default function ContactsPage() {
                                                       <tr>
                                                             <th className="p-4">Date</th>
                                                             <th className="p-4">Name</th>
+                                                             <th className="p-4">Address</th>
                                                             <th className="p-4">Email</th>
                                                             <th className="p-4">Contact</th>
                                                             <th className="p-4">Company</th>
@@ -245,16 +246,17 @@ export default function ContactsPage() {
                                                                   <td className="p-4 text-sm text-gray-500 ">
                                                                         {new Date(contact.createdAt).toLocaleDateString()}
                                                                   </td>
-                                                                  <td className="p-4 font-semibold text-gray-900 ">
+                                                                  <td className="p-4 font-semibold text-gray-900 whitespace-nowrap">
                                                                         <div>
                                                                               <div>{contact.name}</div>
-                                                                              {contact.address && <div className="text-xs text-gray-500">{contact.address}</div>}
+                                                                              
                                                                         </div>
                                                                   </td>
-                                                                  <td className="p-4 text-gray-600 ">{contact.email}</td>
-                                                                  <td className="p-4 text-gray-600 ">{contact.contact || 'N/A'}</td>
-                                                                  <td className="p-4 text-gray-600">{contact.company || 'N/A'}</td>
-                                                                  <td className="p-4 text-gray-600 ">{contact.interested_in}</td>
+                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.address && <div className="text-xs text-gray-500">{contact.address}</div>}</td>
+                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.email}</td>
+                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.contact || 'N/A'}</td>
+                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.company || 'N/A'}</td>
+                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{contact.interested_in}</td>
                                                                   <td className="p-4">
                                                                         <select
                                                                               value={contact.status || 'new'}
