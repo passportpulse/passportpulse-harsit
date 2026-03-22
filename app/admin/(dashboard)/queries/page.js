@@ -238,10 +238,8 @@ export default function QueriesPage() {
                                                       <tr>
                                                             <th className="p-4">Date</th>
                                                             <th className="p-4">Name</th>
-                                                            <th className="p-4">Email</th>
                                                             <th className="p-4">Contact</th>
                                                             <th className="p-4">Service</th>
-                                                            <th className="p-4">Message</th>
                                                             <th className="p-4">Status</th>
                                                             <th className="p-4">Actions</th>
                                                       </tr>
@@ -253,14 +251,13 @@ export default function QueriesPage() {
                                                                         {new Date(query.createdAt).toLocaleDateString()}
                                                                   </td>
                                                                   <td className="p-4 font-semibold text-gray-900 whitespace-nowrap">{query.name}</td>
-                                                                  <td className="p-4 text-gray-600 whitespace-nowrap">{query.email}</td>
                                                                   <td className="p-4 text-gray-600 whitespace-nowrap">{query.contact || 'N/A'}</td>
                                                                   <td className="p-4 text-gray-600 whitespace-nowrap">{query.interested_in}</td>
-                                                                  <td className="p-4">
+                                                                  {/* <td className="p-4">
                                                                         <div className="max-w-xs truncate" title={query.message}>
                                                                               {query.message || 'No message'}
                                                                         </div>
-                                                                  </td>
+                                                                  </td> */}
                                                                   <td className="p-4">
                                                                         <select
                                                                               value={query.status || 'pending'}
