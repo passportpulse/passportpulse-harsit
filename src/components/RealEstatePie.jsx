@@ -44,7 +44,7 @@ const renderCustomizedLabel = (props) => {
     <text
       x={x}
       y={y}
-      fill="black"
+      fill={payload.name === 'BUY' ? 'white' : 'black'}
       textAnchor="middle"
       dominantBaseline="central"
       className="text-[12px] font-black tracking-wider uppercase pointer-events-none"

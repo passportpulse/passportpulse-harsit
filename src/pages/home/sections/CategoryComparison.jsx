@@ -43,12 +43,16 @@ export default function CategoryComparison() {
   return (
     <>
       {/* NEW SECTION WRAPPER */}
-      <Section className="relative bg-orange-50/40 border-y border-orange-100 overflow-hidden py-20">
+      <Section className="relative bg-[#022c22] overflow-hidden py-24 border-y border-emerald-900/50">
+        {/* Subtle Visual Interest */}
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.1)_0%,transparent_50%)] pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(16,185,129,0.1)_0%,transparent_50%)] pointer-events-none" />
+        
         {/* Subtle Background Pattern */}
         <div 
-          className="absolute inset-0 pointer-events-none opacity-[0.15]" 
+          className="absolute inset-0 pointer-events-none opacity-[0.05]" 
           style={{ 
-            backgroundImage: "radial-gradient(#dd571c 1px, transparent 1px)", 
+            backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", 
             backgroundSize: "32px 32px" 
           }}
         />
@@ -56,18 +60,18 @@ export default function CategoryComparison() {
         <Container className="relative z-10">
           <div className="text-center space-y-4 mb-8">
             <h2 className="text-lg lg:text-4xl font-bold tracking-tight">
-              <span className="text-slate-800">filters for </span> <span className="text-dark-orange">intent</span>
+              <span className="text-white">Filters for </span> <span className="text-orange-500">Intent</span>
             </h2>
-            <p className="text-slate-500 text-xs lg:text-sm max-w-2xl mx-auto leading-relaxed font-medium">
+            <p className="text-emerald-100/70 text-xs lg:text-sm max-w-2xl mx-auto leading-relaxed font-medium">
               Not every buyer is looking for the same thing—some want a bargain, while others want a trophy home
             </p>
           </div>
-
+          
           {/* BUTTON */}
           <div className="flex justify-center pt-2 pb-12">
             <button
               onClick={() => setOpen(true)}
-              className="flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl active:scale-95"
+              className="flex items-center gap-2 bg-emerald-500 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-emerald-900 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-95"
             >
               <BarChart3 size={18} />
               Category Comparison

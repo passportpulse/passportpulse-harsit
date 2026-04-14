@@ -249,15 +249,13 @@ export default function HomeHero() {
         <Container className="w-full mt-10">
           <div className="bg-white border-2 border-slate-900 rounded-[32px] p-6 lg:p-10 shadow-sm transition-all hover:shadow-md">
             <div className="flex flex-col items-center">
-              {/* HEADER - Aligned left relative to the content width */}
-              <div className="w-full flex items-center gap-2 mb-6 px-1 lg:px-4">
-                <h2 className="text-xs lg:text-sm font-black text-slate-800 uppercase tracking-widest pl-2">
+              {/* HEADER - Centered */}
+              <div className="w-full flex justify-center items-center gap-2 mb-6 px-1 lg:px-4">
+                <h2 className="text-xs lg:text-sm font-black text-slate-800 uppercase tracking-widest text-center">
                   Explore <span className="text-dark-orange">Verified</span>{" "}
                   Properties
                 </h2>
                 <BadgeCheck className="text-green-600 shrink-0" size={18} />
-                {/* Subtle line decoration */}
-                <div className="h-[1px] flex-grow bg-linear-to-r from-slate-200 to-transparent ml-2"></div>
               </div>
               {/* Buy sell rent */}
               <div className="w-full">
