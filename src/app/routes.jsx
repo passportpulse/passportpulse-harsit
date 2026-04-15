@@ -11,6 +11,7 @@ import JoinUs from "../pages/joinus/JoinUs";
 import Login from "../pages/login/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Register from "../pages/signup/Register";
+import DeveloperRegister from "../pages/signup/DeveloperRegister";
 import ScrollToTop from "../components/ScrollToTop"; 
 import ScheduleVisit from "../pages/schedule-visit/ScheduleVisit";
 import VerifyOtp from "../pages/login/VerifyOtp";
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
       { path: "/verify-otp", element: <VerifyOtp /> },
       { path: "/partner-application-form", element: <PartnerApplicationForm /> },
       { path: "/register", element: <Register /> },
+      { path: "/developer-signup", element: <DeveloperRegister /> },
       { path: "/expert-advice", element: <ExpertAdvice /> },
       { path: "/auction", element: <AuctionTab /> },
     ],
