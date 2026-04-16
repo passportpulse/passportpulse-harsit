@@ -74,7 +74,7 @@ export default function SellerRegister() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
               
               {/* Left Column: Form */}
-              <div className="lg:col-span-7 order-2 lg:order-1">
+              <div className="lg:col-span-7 order-1 lg:order-1">
                 <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-8 border border-white">
                   <form onSubmit={nextStep} className="space-y-6">
                     
@@ -315,7 +315,7 @@ export default function SellerRegister() {
               </div>
 
               {/* Right Column: Benefits & Trust - Aligned with top of Form */}
-              <div className="lg:col-span-5 order-1 lg:order-2">
+              <div className="lg:col-span-5 order-2 lg:order-2">
                 <div className="space-y-8 sticky top-10">
                   <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-2xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-slate-800 rounded-full blur-3xl opacity-50 -mr-10 -mt-10 pointer-events-none"></div>

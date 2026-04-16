@@ -20,6 +20,7 @@ import { placesInWB } from "../../data/locations";
 import DeveloperRegister from "./DeveloperRegister";
 import BuyerRegister from "./BuyerRegister";
 import SellerRegister from "./SellerRegister";
+import AgentRegister from "./AgentRegister";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -43,6 +44,10 @@ export default function Register() {
 
   if (userType === "seller") {
     return <SellerRegister />;
+  }
+
+  if (userType === "partner") {
+    return <AgentRegister />;
   }
 
   // Form State

@@ -86,7 +86,7 @@ export default function BuyerRegister() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
               
               {/* Left Column: Form */}
-              <div className="lg:col-span-7 order-2 lg:order-1">
+              <div className="lg:col-span-7 order-1 lg:order-1">
                 <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-8 border border-white">
                   <form onSubmit={nextStep} className="space-y-6">
                     <InputField
@@ -202,7 +202,7 @@ export default function BuyerRegister() {
               </div>
 
               {/* Right Column: Aligned with top of Form */}
-              <div className="lg:col-span-5 order-1 lg:order-2">
+              <div className="lg:col-span-5 order-2 lg:order-2">
                 <div className="space-y-8 sticky top-10">
                   <div className="bg-white rounded-[2rem] p-6 border border-orange-100 shadow-xl shadow-orange-100/30">
                     <div className="flex items-center gap-2 mb-4">
