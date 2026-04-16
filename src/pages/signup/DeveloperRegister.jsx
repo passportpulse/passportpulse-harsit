@@ -358,7 +358,8 @@ export default function DeveloperRegister() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-black text-slate-800 mb-2 tracking-tight uppercase px-4">Request a Demo</h2>
             <p className="text-[13px] text-slate-500 font-medium mb-8">Ready to see the full potential? Get a personalized walkthrough of the Bhaiya Developer Suite.</p>
-            <button className="px-10 py-4 bg-slate-900 text-dark-orange text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-black transition-all shadow-2xl shadow-slate-300 active:scale-95">
+            <button className="px-10 py-4 bg-slate-900 text-dark-orange text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-black transition-all shadow-2xl shadow-slate-300 active:scale-95 flex items-center justify-center gap-3 mx-auto">
+              <Headset size={20} />
               Schedule My Demo Now
             </button>
           </div>

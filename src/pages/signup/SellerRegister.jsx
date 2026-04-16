@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Phone, User, Check, Building, Key, Mail, Hash, MapPin, Map,
   Calendar, ShieldCheck, TrendingUp, Lock, Zap, Clock, ChevronRight, X, ArrowRight,
-  FileText, Upload, IdCard
+  FileText, Upload, IdCard, Headset
 } from "lucide-react";
 
 export default function SellerRegister() {
@@ -52,28 +52,29 @@ export default function SellerRegister() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          
-          {/* Left Column: Flow */}
-          <div className="lg:col-span-7">
-            
-            {step === 1 && (
-              <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 max-w-xl">
-                <div className="mb-10">
-                  <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-[1.5rem] bg-orange-50 border border-orange-100 mb-6 shadow-md hover:shadow-orange-200/50 transform hover:-translate-y-0.5 transition-all cursor-default">
-                    <Key size={16} className="text-dark-orange" />
-                    <span className="text-[11px] font-extrabold uppercase tracking-[0.15em] text-dark-orange">
-                      List Your Property. Get Real Buyers.
-                    </span>
-                  </div>
-                  <h1 className="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight leading-none mb-4">
-                    Don't just list it—sell it. Join India's most trusted <span className="text-dark-orange">community.</span>
-                  </h1>
-                  <p className="text-[13px] text-slate-500 font-medium">
-                    Property Wala Bhaiya handles the heavy lifting, finding buyers and verifying leads, while you stay in control.
-                  </p>
-                </div>
+        {step === 1 && (
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+            {/* Header Section - Centered */}
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-[1.5rem] bg-orange-50 border border-orange-100 mb-6 shadow-md hover:shadow-orange-200/50 transform hover:-translate-y-0.5 transition-all cursor-default">
+                <Key size={16} className="text-dark-orange" />
+                <span className="text-[11px] font-extrabold uppercase tracking-[0.15em] text-dark-orange">
+                  List Your Property. Get Real Buyers.
+                </span>
+              </div>
+              <h1 className="text-2xl lg:text-4xl font-black text-slate-800 tracking-tight leading-none mb-4">
+                Don't just list it—sell it. Join India's most trusted <span className="text-dark-orange">community.</span>
+              </h1>
+              <p className="text-[13px] text-slate-500 font-medium">
+                Property Wala Bhaiya handles the heavy lifting, finding buyers and verifying leads, while you stay in control.
+              </p>
+            </div>
 
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+              
+              {/* Left Column: Form */}
+              <div className="lg:col-span-7 order-2 lg:order-1">
                 <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-8 border border-white">
                   <form onSubmit={nextStep} className="space-y-6">
                     
@@ -157,7 +158,6 @@ export default function SellerRegister() {
                       required
                     />
 
-                    {/* Additional Mandatory KYC Fields */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
                        <InputField
                         label="Alternate Mobile"
@@ -198,8 +198,7 @@ export default function SellerRegister() {
                       />
                     </div>
 
-                    {/* Conditional Fields for Agents/Builders */}
-                    {(formData.identity === "Agent/Broker" || formData.identity === "Builder/Developer") && (
+                    {formData.identity !== "Individual Owner" && (
                       <div className="p-5 mt-4 rounded-2xl bg-orange-50 border border-orange-100 space-y-5 animate-in fade-in">
                         <h3 className="text-xs font-black uppercase text-dark-orange tracking-widest mb-2 flex items-center gap-2">
                           <Building size={14} /> Corporate Details
@@ -233,12 +232,22 @@ export default function SellerRegister() {
                       </div>
                     )}
                     
-                    {/* KYC Document Uploads */}
+                    <div className="mt-10 mb-8 bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
+                      <div className="absolute -top-24 -right-24 w-64 h-64 bg-slate-800 rounded-full blur-3xl opacity-50"></div>
+                      <h3 className="text-xl font-black mb-6 tracking-tight flex items-center gap-2 text-white">
+                        The "Seller Suite"
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 pb-2">
+                        <BenefitItem icon={<Zap size={20} className="text-orange-500" />} title="Zero Brokerage" desc="Keep 100% of the sale price." />
+                        <BenefitItem icon={<ShieldCheck size={20} className="text-orange-500"/>} title="Verified Buyers" desc="No time-wasters, only serious leads." />
+                        <BenefitItem icon={<TrendingUp size={20} className="text-orange-500"/>} title="Market Value" desc="Price your property perfectly." />
+                        <BenefitItem icon={<Lock size={20} className="text-orange-500"/>} title="Fraud Protection" desc="We hide your number from bots." />
+                      </div>
+                    </div>
+
                     <div className="pt-4 border-t border-slate-100 mt-6 pt-6">
-                      <h3 className="text-sm font-black text-slate-800 mb-4">Mandatory Document Uploads</h3>
+                      <h3 className="text-[11px] font-black uppercase text-dark-orange tracking-[0.2em] mb-4">Mandatory Document Uploads</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        
-                        {/* Aadhaar Upload */}
                         <div>
                           <label className="text-xs font-black uppercase text-slate-500 tracking-widest ml-1 mb-2 block">
                             Aadhaar Card (Front & Back)
@@ -252,8 +261,6 @@ export default function SellerRegister() {
                             <input type="file" className="hidden" required />
                           </label>
                         </div>
-
-                        {/* PAN Upload */}
                         <div>
                           <label className="text-xs font-black uppercase text-slate-500 tracking-widest ml-1 mb-2 block">
                             PAN Card
@@ -267,8 +274,6 @@ export default function SellerRegister() {
                             <input type="file" className="hidden" required />
                           </label>
                         </div>
-                        
-                        {/* Address Proof Upload */}
                         <div className="md:col-span-2 mt-2">
                           <label className="text-xs font-black uppercase text-slate-500 tracking-widest ml-1 mb-2 block">
                             Address Proof (Electricity/Water Bill)
@@ -284,7 +289,6 @@ export default function SellerRegister() {
                             <input type="file" className="hidden" required />
                           </label>
                         </div>
-
                       </div>
                     </div>
 
@@ -295,7 +299,6 @@ export default function SellerRegister() {
                       START LISTING FOR FREE <ChevronRight size={18} />
                     </button>
 
-                    {/* Social Logins */}
                     <div className="mt-8">
                       <div className="relative flex items-center py-2">
                         <div className="flex-grow border-t border-slate-100"></div>
@@ -307,132 +310,110 @@ export default function SellerRegister() {
                         <SocialButton label="in" title="LinkedIn" className="bg-[#0077b5] text-white hover:bg-[#005582] border-none" />
                       </div>
                     </div>
-
                   </form>
                 </div>
               </div>
-            )}
 
-            {step === 2 && (
-              <div className="animate-in fade-in slide-in-from-right-8 duration-700 max-w-xl">
-                <div className="mb-10">
-                  <h1 className="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight leading-none mb-4">
-                    The Setup. Let's build your Dashboard.
-                  </h1>
-                  <p className="text-[13px] text-slate-500 font-medium">
-                    Help us understand what you're listing today so we can queue up the right buyers.
-                  </p>
-                </div>
-
-                <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-8 border border-white">
-                  <form onSubmit={nextStep} className="space-y-8">
-                    
-                    {/* Q1: Property Type */}
-                    <div className="space-y-4">
-                      <label className="text-sm font-black text-slate-800">
-                        1. What are you listing today?
-                      </label>
-                      <div className="flex flex-wrap gap-4">
-                        <PropTypeCard icon={<Building size={20}/>} label="Residential" selected={formData.propertyType} set={(v) => setFormData({...formData, propertyType: v})} />
-                        <PropTypeCard icon={<Building size={20}/>} label="Commercial" selected={formData.propertyType} set={(v) => setFormData({...formData, propertyType: v})} />
-                        <PropTypeCard icon={<Map size={20}/>} label="Land / Plot" selected={formData.propertyType} set={(v) => setFormData({...formData, propertyType: v})} />
+              {/* Right Column: Benefits & Trust - Aligned with top of Form */}
+              <div className="lg:col-span-5 order-1 lg:order-2">
+                <div className="space-y-8 sticky top-10">
+                  <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-slate-800 rounded-full blur-3xl opacity-50 -mr-10 -mt-10 pointer-events-none"></div>
+                    <div className="space-y-5 relative z-10">
+                      <div className="flex gap-4">
+                        <span className="text-4xl">🎉</span>
+                        <p className="text-xs font-medium text-slate-300 leading-relaxed italic">
+                          "Over <strong className="text-white text-sm">5,000+ owners</strong> sold their property via Bhaiya last month without paying a single rupee in brokerage."
+                        </p>
+                      </div>
+                      <div className="h-px w-full bg-slate-800"></div>
+                      <div className="flex gap-4 items-center">
+                        <Clock size={28} className="text-dark-orange" />
+                        <p className="text-xs font-medium text-slate-300 leading-relaxed uppercase tracking-wider">
+                          Average time to find a tenant:<br/>
+                          <span className="text-lg font-black text-white">Just 4 Days.</span>
+                        </p>
                       </div>
                     </div>
-
-                    {/* Q2: Urgency */}
-                    <div className="space-y-4 pt-4 border-t border-slate-100">
-                      <label className="text-sm font-black text-slate-800">
-                        2. How fast do you want to sell/rent?
-                      </label>
-                      <div className="space-y-3">
-                        <RadioRow id="urg-1" name="urgency" label="Just testing the market." selected={formData.urgency === "Testing"} onChange={() => setFormData({...formData, urgency: "Testing"})} />
-                        <RadioRow id="urg-2" name="urgency" label="Want to sell/rent within 30 days." selected={formData.urgency === "30 Days"} onChange={() => setFormData({...formData, urgency: "30 Days"})} />
-                        <RadioRow id="urg-3" name="urgency" label="Urgent! Need a buyer ASAP." selected={formData.urgency === "Urgent"} onChange={() => setFormData({...formData, urgency: "Urgent"})} highlight />
-                      </div>
-                    </div>
-
-                    {/* Q3: Fair-Play Pledge */}
-                    <div className="space-y-4 pt-4 border-t border-slate-100">
-                      <label className="text-sm font-black text-slate-800">
-                        3. The "Bhaiya Fair-Play" Pledge
-                      </label>
-                      <label htmlFor="fairplay" className={`flex gap-4 p-5 rounded-2xl cursor-pointer transition-all border ${formData.fairPlayChecked ? 'bg-orange-50 border-orange-200' : 'bg-slate-50 border-slate-200'}`}>
-                        <div className="mt-1">
-                          <input 
-                            type="checkbox" 
-                            id="fairplay" 
-                            required
-                            checked={formData.fairPlayChecked}
-                            onChange={(e) => setFormData({...formData, fairPlayChecked: e.target.checked})}
-                            className="peer appearance-none w-5 h-5 rounded border-2 border-slate-300 checked:border-dark-orange checked:bg-dark-orange transition-all cursor-pointer relative"
-                          />
-                        </div>
-                        <div>
-                          <p className="text-[11px] font-medium leading-relaxed text-slate-600 mb-2">
-                            "I, <strong className="text-slate-800">{formData.name || "Seller"}</strong>, promise to keep my listing honest. I will upload real photos and mark my property as 'SOLD' within 24 hours of closing the deal so Bhaiya can keep the portal clean for everyone."
-                          </p>
-                          <span className="text-xs font-black uppercase text-dark-orange tracking-widest">
-                            I Agree to the Fair-Play Policy
-                          </span>
-                        </div>
-                      </label>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-slate-900 text-white text-sm font-black uppercase tracking-[0.15em] shadow-xl hover:bg-black active:scale-[0.98] transition-all"
-                    >
-                      Open Seller Dashboard <ChevronRight size={18} />
-                    </button>
-                    
-                  </form>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right Column: Benefits & Trust */}
-          <div className="lg:col-span-5 hidden lg:block">
-            <div className="sticky top-10 space-y-8">
-              
-              {/* Why Sellers Choose Us */}
-              <div className="bg-orange-50/50 border border-orange-100 rounded-[2rem] p-8 shadow-xl shadow-slate-200/50">
-                <h3 className="text-lg font-black text-slate-800 mb-6 tracking-tight">
-                  Why Sellers Choose Us
-                </h3>
-                
-                <div className="space-y-6">
-                  <BenefitRow icon={<Zap size={20} className="text-orange-500" />} title="Zero Brokerage" desc="You worked hard for your home; you keep 100% of the sale price." bg="bg-white" shadow="shadow-sm" />
-                  <BenefitRow icon={<ShieldCheck size={20} className="text-orange-500"/>} title="Verified Buyers Only" desc="We filter out the time-wasters. Every lead is a genuine, OTP-verified buyer." bg="bg-white" shadow="shadow-sm" />
-                  <BenefitRow icon={<TrendingUp size={20} className="text-orange-500"/>} title="Market Value Check" desc="Use our Price Heat Map to price your property perfectly." bg="bg-white" shadow="shadow-sm" />
-                  <BenefitRow icon={<Lock size={20} className="text-orange-500"/>} title="Fraud Protection" desc="We hide your number from bots. Only serious buyers reach you." bg="bg-white" shadow="shadow-sm" />
-                </div>
-              </div>
-
-              {/* Social Proof Sidebar */}
-              <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-2xl relative overflow-hidden">
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-slate-800 rounded-full blur-3xl opacity-50 -mr-10 -mt-10 pointer-events-none"></div>
-                 <div className="space-y-5 relative z-10">
-                   <div className="flex gap-4">
-                     <span className="text-4xl">🎉</span>
-                     <p className="text-xs font-medium text-slate-300 leading-relaxed italic">
-                       "Over <strong className="text-white text-sm">5,000+ owners</strong> sold their property via Bhaiya last month without paying a single rupee in brokerage."
-                     </p>
-                   </div>
-                   <div className="h-px w-full bg-slate-800"></div>
-                   <div className="flex gap-4 items-center">
-                     <Clock size={28} className="text-dark-orange" />
-                     <p className="text-xs font-medium text-slate-300 leading-relaxed uppercase tracking-wider">
-                       Average time to find a tenant:<br/>
-                       <span className="text-lg font-black text-white">Just 4 Days.</span>
-                     </p>
-                   </div>
-                 </div>
               </div>
 
             </div>
           </div>
-        </div>
+        )}
+
+        {step === 2 && (
+          <div className="animate-in fade-in slide-in-from-right-8 duration-700 max-w-xl mx-auto">
+            <div className="text-center mb-10">
+              <h1 className="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight leading-none mb-4">
+                The Setup. Let's build your Dashboard.
+              </h1>
+              <p className="text-[13px] text-slate-500 font-medium">
+                Help us understand what you're listing today so we can queue up the right buyers.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-8 border border-white">
+              <form onSubmit={nextStep} className="space-y-8">
+                <div className="space-y-4">
+                  <label className="text-[11px] font-black uppercase text-dark-orange tracking-[0.2em]">
+                    1. What are you listing today?
+                  </label>
+                  <div className="flex flex-wrap gap-4">
+                    <PropTypeCard icon={<Building size={20}/>} label="Residential" selected={formData.propertyType} set={(v) => setFormData({...formData, propertyType: v})} />
+                    <PropTypeCard icon={<Building size={20}/>} label="Commercial" selected={formData.propertyType} set={(v) => setFormData({...formData, propertyType: v})} />
+                    <PropTypeCard icon={<Map size={20}/>} label="Land / Plot" selected={formData.propertyType} set={(v) => setFormData({...formData, propertyType: v})} />
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-slate-100">
+                  <label className="text-[11px] font-black uppercase text-dark-orange tracking-[0.2em]">
+                    2. How fast do you want to sell/rent?
+                  </label>
+                  <div className="space-y-3">
+                    <RadioRow id="urg-1" name="urgency" label="Just testing the market." selected={formData.urgency === "Testing"} onChange={() => setFormData({...formData, urgency: "Testing"})} />
+                    <RadioRow id="urg-2" name="urgency" label="Want to sell/rent within 30 days." selected={formData.urgency === "30 Days"} onChange={() => setFormData({...formData, urgency: "30 Days"})} />
+                    <RadioRow id="urg-3" name="urgency" label="Urgent! Need a buyer ASAP." selected={formData.urgency === "Urgent"} onChange={() => setFormData({...formData, urgency: "Urgent"})} highlight />
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-slate-100">
+                  <label className="text-[11px] font-black uppercase text-dark-orange tracking-[0.2em]">
+                    3. The "Bhaiya Fair-Play" Pledge
+                  </label>
+                  <label htmlFor="fairplay" className={`flex gap-4 p-5 rounded-2xl cursor-pointer transition-all border ${formData.fairPlayChecked ? 'bg-orange-50 border-orange-200' : 'bg-slate-50 border-slate-200'}`}>
+                    <div className="mt-1">
+                      <input 
+                        type="checkbox" 
+                        id="fairplay" 
+                        required
+                        checked={formData.fairPlayChecked}
+                        onChange={(e) => setFormData({...formData, fairPlayChecked: e.target.checked})}
+                        className="peer appearance-none w-5 h-5 rounded border-2 border-slate-300 checked:border-dark-orange checked:bg-dark-orange transition-all cursor-pointer relative"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-medium leading-relaxed text-slate-600 mb-2">
+                        "I, <strong className="text-slate-800">{formData.name || "Seller"}</strong>, promise to keep my listing honest. I will upload real photos and mark my property as 'SOLD' within 24 hours of closing the deal so Bhaiya can keep the portal clean for everyone."
+                      </p>
+                      <span className="text-xs font-black uppercase text-dark-orange tracking-widest">
+                        I Agree to the Fair-Play Policy
+                      </span>
+                    </div>
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-slate-900 text-white text-sm font-black uppercase tracking-[0.15em] shadow-xl hover:bg-black active:scale-[0.98] transition-all"
+                >
+                  Open Seller Dashboard <ChevronRight size={18} />
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Step 3: Quick-Start Guide Pop-Up Modal */}
         {step === 3 && (
@@ -444,7 +425,8 @@ export default function SellerRegister() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-black text-slate-800 mb-2 tracking-tight uppercase px-4">Request a Demo</h2>
             <p className="text-[13px] text-slate-500 font-medium mb-8">Ready to see the full potential? Get a personalized walkthrough of the Bhaiya Seller Suite.</p>
-            <button className="px-10 py-4 bg-slate-900 text-dark-orange text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-black transition-all shadow-2xl shadow-slate-300 active:scale-95">
+            <button className="px-10 py-4 bg-slate-900 text-dark-orange text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-black transition-all shadow-2xl shadow-slate-300 active:scale-95 flex items-center justify-center gap-3 mx-auto">
+              <Headset size={20} />
               Schedule My Demo Now
             </button>
           </div>
@@ -458,7 +440,6 @@ export default function SellerRegister() {
 {/* Onboarding Guide Modal */}
 function OnboardingModal({ onClose, name }) {
   const [slide, setSlide] = useState(0);
-  
   const slides = [
     { title: "High-Quality Photos", desc: "Listings with well-lit, wide-angle photos sell 4x faster. Open all curtains and turn on lights before snapping.", icon: "📸" },
     { title: "Accurate Pricing", desc: "Overpriced homes sit empty. Use the Bhaiya Heat Map to find the sweet spot for your neighborhood.", icon: "🎯" },
@@ -469,82 +450,43 @@ function OnboardingModal({ onClose, name }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
       <div className="w-full max-w-lg bg-white rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
-        
-        {/* Header Ribbon */}
         <div className="bg-dark-orange px-6 py-4 flex justify-between items-center text-white">
-          <div className="text-xs font-black uppercase tracking-widest">
-            Seller Success Guide
-          </div>
-          <button onClick={onClose} className="hover:bg-white/20 p-1 rounded-full transition-all">
-            <X size={18} />
-          </button>
+          <div className="text-xs font-black uppercase tracking-widest">Seller Success Guide</div>
+          <button onClick={onClose} className="hover:bg-white/20 p-1 rounded-full transition-all"><X size={18} /></button>
         </div>
-
-        {/* Slide Content */}
         <div className="p-10 text-center min-h-[280px] flex flex-col justify-center items-center relative">
           <div className="text-6xl mb-6">{slides[slide].icon}</div>
           <h2 className="text-2xl font-black text-slate-900 mb-3">{slides[slide].title}</h2>
-          <p className="text-sm text-slate-500 font-medium leading-relaxed px-4">
-            {slides[slide].desc}
-          </p>
-          
+          <p className="text-sm text-slate-500 font-medium leading-relaxed px-4">{slides[slide].desc}</p>
           <div className="absolute bottom-4 flex gap-2">
             {slides.map((_, i) => (
               <div key={i} className={`w-2 h-2 rounded-full ${i === slide ? 'bg-dark-orange' : 'bg-slate-200'}`} />
             ))}
           </div>
         </div>
-
-        {/* Actions */}
         <div className="p-6 border-t border-slate-100 flex justify-between items-center bg-slate-50">
-          <button 
-            onClick={() => slide > 0 && setSlide(slide - 1)}
-            className={`text-xs font-bold uppercase tracking-wider ${slide === 0 ? 'text-slate-300 pointer-events-none' : 'text-slate-500 hover:text-slate-800'}`}
-          >
-            Back
-          </button>
-          
+          <button onClick={() => slide > 0 && setSlide(slide - 1)} className={`text-xs font-bold uppercase tracking-wider ${slide === 0 ? 'text-slate-300 pointer-events-none' : 'text-slate-500 hover:text-slate-800'}`}>Back</button>
           {slide < slides.length - 1 ? (
-             <button 
-              onClick={() => setSlide(slide + 1)}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider hover:bg-black transition-all"
-             >
-               Next Rule <ArrowRight size={14} />
-             </button>
+             <button onClick={() => setSlide(slide + 1)} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider hover:bg-black transition-all">Next Rule <ArrowRight size={14} /></button>
           ) : (
-             <button 
-              onClick={onClose}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-dark-orange text-white text-xs font-black uppercase tracking-wider hover:bg-orange-600 transition-all shadow-md"
-             >
-               Let's Go! <ArrowRight size={14} />
-             </button>
+             <button onClick={onClose} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-dark-orange text-white text-xs font-black uppercase tracking-wider hover:bg-orange-600 transition-all shadow-md">Let's Go! <ArrowRight size={14} /></button>
           )}
         </div>
-
       </div>
     </div>
   );
 }
 
-{/* Mini Components */}
-
 function InputField({ label, subLabel, icon, ...props }) {
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between items-baseline mb-1">
-        <label className="text-xs font-black uppercase text-slate-500 tracking-widest ml-1">
-          {label}
-        </label>
+        <label className="text-xs font-black uppercase text-slate-500 tracking-widest ml-1">{label}</label>
         {subLabel && <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded mr-1">{subLabel}</span>}
       </div>
       <div className="relative flex items-center group">
-        <input
-          {...props}
-          className="w-full pl-4 pr-11 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 outline-none focus:bg-white focus:border-dark-orange transition-all placeholder:text-slate-400 placeholder:font-medium shadow-sm hover:border-slate-300"
-        />
-        <div className="absolute right-4 text-slate-400 group-focus-within:text-dark-orange transition-colors">
-          {icon}
-        </div>
+        <input {...props} className="w-full pl-4 pr-11 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold text-slate-800 outline-none focus:bg-white focus:border-dark-orange transition-all placeholder:text-slate-400 placeholder:font-medium shadow-sm hover:border-slate-300" />
+        <div className="absolute right-4 text-slate-400 group-focus-within:text-dark-orange transition-colors">{icon}</div>
       </div>
     </div>
   );
@@ -553,15 +495,7 @@ function InputField({ label, subLabel, icon, ...props }) {
 function IdentityRadio({ label, selected, onChange }) {
   const isSelected = selected === label;
   return (
-    <button
-      type="button"
-      onClick={() => onChange(label)}
-      className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all border-2 flex items-center gap-2 ${
-        isSelected 
-        ? 'border-dark-orange bg-orange-50 text-dark-orange shadow-md' 
-        : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'
-      }`}
-    >
+    <button type="button" onClick={() => onChange(label)} className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all border-2 flex items-center gap-2 ${isSelected ? 'border-dark-orange bg-orange-50 text-dark-orange shadow-md' : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'}`}>
       <div className={`w-3 h-3 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-dark-orange bg-dark-orange' : 'border-slate-300'}`}>
         {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
       </div>
@@ -590,24 +524,24 @@ function RadioRow({ id, name, label, selected, onChange, highlight }) {
   );
 }
 
+function BenefitItem({ icon, title, desc }) {
+  return (
+    <div className="flex gap-4 group">
+      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/5 group-hover:bg-dark-orange group-hover:border-dark-orange/50 transition-all text-white">
+        {icon}
+      </div>
+      <div>
+        <h4 className="text-sm font-bold text-white mb-1">{title}</h4>
+        <p className="text-xs text-slate-400 leading-relaxed font-medium">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
 function SocialButton({ label, title, className = "" }) {
   return (
     <button type="button" className={`w-32 h-14 rounded-xl border border-slate-200 bg-white flex items-center justify-center gap-2 text-slate-700 font-bold text-sm hover:bg-slate-50 hover:border-slate-300 shadow-sm active:scale-95 transition-all ${className}`}>
       <span className="font-black text-lg">{label}</span> {title}
     </button>
-  );
-}
-
-function BenefitRow({ icon, title, desc, bg="bg-white/10", shadow="shadow-none" }) {
-  return (
-    <div className="flex gap-4 group">
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-all border border-slate-100 ${bg} ${shadow} group-hover:scale-105 group-hover:border-orange-200`}>
-        {icon}
-      </div>
-      <div>
-        <h4 className="text-sm font-bold text-slate-800 mb-0.5">{title}</h4>
-        <p className="text-xs text-slate-500 leading-relaxed font-medium">{desc}</p>
-      </div>
-    </div>
   );
 }
