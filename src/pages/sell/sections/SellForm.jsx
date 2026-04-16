@@ -1,886 +1,499 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  MapPin,
-  Wallet,
-  Settings2,
-  Ruler,
-  LayoutGrid,
-  ChevronRight,
-  Camera,
-  Video,
-  X,
-  Plus,
-  ShieldCheck,
-  FileText,
-  Check,
+  MapPin, Wallet, Settings2, Ruler, LayoutGrid, ChevronRight, ChevronLeft,
+  Camera, Video, X, Plus, ShieldCheck, FileText, Check, Info, 
+  Home, Building2, Landmark, Navigation2, Layers, Key, CheckCircle2,
+  Calendar, Car, Compass, Bath, DoorOpen, Sparkles, AlertCircle,
+  Trees, CloudSun, Zap, Shield, HelpCircle, ArrowUpRight, Microscope
 } from "lucide-react";
 
 import { states, citiesInWB, placesInWB } from "../../../data/locations";
 import Header from "../../../components/Header";
 
 export default function SellForm({ formData, setFormData, onSubmit }) {
-  const propertyTypes = [
-    "Flats",
-    "Plots",
-    "Joint Ventures",
-    "House/Duplex",
-    "Office/Retail",
-    "Factory",
-    "Industrial Plots",
-    "Ware House",
-    "Hospital",
-    "Hotels/Resort",
-    "Petrol Pump",
-    "Institutes",
-    "Investment",
-  ];
+  const [step, setStep] = useState(1);
+  const totalSteps = 6;
 
-  const availablePlaces =
-    formData && formData.city ? placesInWB[formData.city] || [] : [];
+  // Local helper for market average
+  const [marketAvg, setMarketAvg] = useState(6500000); 
+  const [priceTip, setPriceTip] = useState(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('property_listing_draft_v3');
+    if (saved) {
+      try {
+        setFormData(JSON.parse(saved));
+      } catch (e) { console.error("Draft fail"); }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('property_listing_draft_v3', JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    if (formData.price) {
+      const p = parseFloat(formData.price);
+      if (p < marketAvg * 0.85) {
+        setPriceTip({ type: 'low', text: "Bhaiya says: Incredible deal! This is below market average. Expect high enquiry volume. ⚡" });
+      } else if (p > marketAvg * 1.15) {
+        setPriceTip({ type: 'high', text: "Bhaiya says: This is slightly premium for this area. Highlight your high-end amenities! 💎" });
+      } else {
+        setPriceTip({ type: 'good', text: "Bhaiya says: Spot on! This price is exactly at the current market sweet spot. ✋" });
+      }
+    } else { setPriceTip(null); }
+  }, [formData.price, marketAvg]);
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
-  // --- Media Handlers ---
-  const handleFileChange = (e, type, id = null) => {
-    const files = Array.from(e.target.files);
-
-    // DOCUMENTS (single file)
-    if (type === "documents" && id) {
-      const file = files[0];
-      if (!file) return;
-
-      const preview = URL.createObjectURL(file);
-
-      setFormData({
-        ...formData,
-        documents: {
-          ...formData.documents,
-          [id]: {
-            file,
-            name: file.name,
-            type: file.type,
-            preview,
-          },
-        },
-      });
-
-      return;
+  const nextStep = (e) => {
+    e?.preventDefault();
+    if (step < totalSteps) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setStep(step + 1);
     }
-
-    // IMAGES / VIDEOS
-    const currentMedia = formData[type] || [];
-
-    const newMedia = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      id: Math.random().toString(36).substr(2, 9),
-    }));
-
-    setFormData({
-      ...formData,
-      [type]: [...currentMedia, ...newMedia],
-    });
   };
 
-  const removeMedia = (type, id) => {
-    if (type === "documents") {
-      const updatedDocs = { ...formData.documents };
-      delete updatedDocs[id];
-
-      setFormData({
-        ...formData,
-        documents: updatedDocs,
-      });
-
-      return;
+  const prevStep = () => {
+    if (step > 1) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setStep(step - 1);
     }
-
-    const filtered = formData[type].filter((item) => item.id !== id);
-
-    setFormData({
-      ...formData,
-      [type]: filtered,
-    });
   };
 
-  const amenitiesList = [
-    "Lift",
-    "Gated Community",
-    "Parking",
-    "Power Backup",
-    "WiFi",
-    "AC",
-    "Pet Allowed",
-    "Purified Water",
-  ];
+  const inWords = (num) => {
+    if (!num) return "";
+    const n = parseFloat(num);
+    if (n >= 10000000) return (n / 10000000).toFixed(2) + " Cr";
+    if (n >= 100000) return (n / 100000).toFixed(2) + " Lakh";
+    if (n >= 1000) return (n / 1000).toFixed(2) + " K";
+    return n;
+  };
 
-  const isResidential = ["flat", "house", "duplex"].includes(
-    formData?.type?.toLowerCase(),
+  const StepIndicator = () => (
+    <div className="bg-slate-50 border-b border-slate-100 p-8 lg:px-12">
+      <div className="flex justify-between relative">
+        <div className="absolute top-5 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 rounded-full overflow-hidden">
+             <motion.div 
+               className="h-full bg-gradient-to-r from-dark-orange to-orange-400"
+               initial={{ width: 0 }}
+               animate={{ width: `${((step - 1) / (totalSteps - 1)) * 100}%` }}
+               transition={{ duration: 0.5 }}
+             />
+        </div>
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div key={i} className="relative z-10 flex flex-col items-center gap-3">
+             <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 transform ${
+                step === i ? 'bg-dark-orange text-white rotate-12 scale-125 shadow-xl shadow-orange-200' : 
+                step > i ? 'bg-green-500 text-white scale-100' : 'bg-white text-slate-300 border-2 border-slate-100'
+             }`}>
+                {step > i ? <Check size={18} strokeWidth={4} /> : i}
+             </div>
+             <span className={`text-[10px] font-black uppercase tracking-widest ${step === i ? 'text-dark-orange' : 'text-slate-400'}`}>
+                {["Basics", "Specs", "Price", "Plus", "Media", "Fine"][i-1]}
+             </span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-2 pb-10">
-      {/* HEADER */}
+    <div className="max-w-4xl mx-auto px-4 pb-24">
       <Header
-        tag="Property Listing"
+        tag={`Step ${step} of ${totalSteps}`}
         title="Post Your"
         highlight="Property"
-        subtitle="List your property on Property Wala Bhaiya digital platform and connect directly with genuine buyers."
+        subtitle="Follow our professional 6-step wizard to list your property and get genuine buyers instantly."
       />
 
-      <div className="bg-white border border-slate-200 rounded-3xl shadow-xl overflow-hidden">
-        <div className="p-5 lg:p-8 space-y-8">
-          {/* LOCATION */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-              <MapPin size={14} /> Property Location
-            </div>
+      <div className="bg-white rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.12)] border border-white/50 overflow-hidden relative backdrop-blur-3xl">
+        <StepIndicator />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {/* STATE */}
-              <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                <label className="text-[8px] font-black uppercase text-slate-400 block mb-1">
-                  State
-                </label>
-                <select
-                  className="w-full bg-transparent text-xs font-bold outline-none"
-                  value={formData.state || "West Bengal"}
-                  onChange={(e) => handleChange("state", e.target.value)}
-                >
-                  {states.map((s) => (
-                    <option key={s.id} value={s.name}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+        <div className="p-8 lg:p-14">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "circOut" }}
+            >
+              {/* --- STEP 1: BASICS --- */}
+              {step === 1 && (
+                <div className="space-y-10">
+                  <SectionHeader icon={<Landmark />} title="Property Identity" sub="Geographic and category classification." />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <ChoiceGroup labels="Listing Intent" value={formData.listingType} choices={["For Sale", "For Rent", "Commercial", "PG"]} onChange={(v) => handleChange("listingType", v)} />
+                    <ChoiceGroup labels="Category" value={formData.category} choices={["Flat", "House", "Villa", "Plot", "Shop"]} onChange={(v) => handleChange("category", v)} />
+                    
+                    <div className="md:col-span-2">
+                       <InputField 
+                         label="Society / Project Name" 
+                         placeholder="e.g. South City Gardens" 
+                         value={formData.society} 
+                         onChange={(e) => handleChange("society", e.target.value)} 
+                         icon={<Building2 size={20} className="text-slate-300"/>}
+                       />
+                    </div>
 
-              {/* CITY */}
-              <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                <label className="text-[8px] font-black uppercase text-slate-400 block mb-1">
-                  City
-                </label>
-                <select
-                  className="w-full bg-transparent text-xs font-bold outline-none"
-                  value={formData.city || ""}
-                  onChange={(e) => {
-                    const newCity = e.target.value;
-                    setFormData({
-                      ...formData,
-                      city: newCity,
-                      loc: placesInWB[newCity]?.[0] || "",
-                    });
-                  }}
-                >
-                  <option value="">Select City</option>
-                  {citiesInWB.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                    <div className="grid grid-cols-2 gap-4 md:col-span-2">
+                         <ModernSelect label="Target City" value={formData.city} options={citiesInWB} onChange={(v) => handleChange("city", v)} />
+                         <ModernSelect label="Locality / Sector" value={formData.locality} options={placesInWB[formData.city] || []} onChange={(v) => handleChange("locality", v)} />
+                    </div>
 
-              {/* AREA */}
-              <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 ">
-                <label className="text-[8px] font-black uppercase text-slate-400 block mb-1">
-                  Area
-                </label>
-                <select
-                  className="w-full bg-transparent text-xs font-bold outline-none"
-                  value={formData.loc || ""}
-                  onChange={(e) => handleChange("loc", e.target.value)}
-                >
-                  <option value="">Select Area</option>
-                  {availablePlaces.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </section>
-
-          {/* AREA SIZE */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-              <Ruler size={14} /> Property Size
-            </div>
-
-            <div className="flex gap-3">
-              {/* Area Input */}
-              <div className="flex-1 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                <input
-                  type="number"
-                  placeholder="Total Area"
-                  value={formData.area || ""}
-                  onChange={(e) => handleChange("area", e.target.value)}
-                  className="w-full bg-transparent text-xs outline-none"
-                />
-              </div>
-
-              {/* Unit Dropdown */}
-              <div className="w-32 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                <select
-                  value={formData.unit || ""}
-                  onChange={(e) => handleChange("unit", e.target.value)}
-                  className="w-full bg-transparent text-xs outline-none"
-                >
-                  <option value="">Unit</option>
-                  <option value="sqft">Sq.ft</option>
-                  <option value="katha">Katha</option>
-                  <option value="decimal">Decimal</option>
-                  <option value="yard">Yard</option>
-                  <option value="acre">Acre</option>
-                </select>
-              </div>
-            </div>
-          </section>
-
-          {/* PROPERTY DETAILS */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-              <Settings2 size={14} /> Property Details
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <select
-                className="bg-slate-50 p-3 rounded-xl text-xs font-bold border border-slate-200"
-                value={formData.type || ""}
-                onChange={(e) => handleChange("type", e.target.value)}
-              >
-                <option value="">Property Type</option>
-                {propertyTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-
-              {isResidential && (
-                <select
-                  className="bg-slate-50 p-3 rounded-xl text-xs font-bold border border-slate-200"
-                  value={formData.bed || ""}
-                  onChange={(e) => handleChange("bed", e.target.value)}
-                >
-                  <option value="">BHK</option>
-                  <option>1 BHK</option>
-                  <option>2 BHK</option>
-                  <option>3 BHK</option>
-                  <option>4 BHK</option>
-                </select>
-              )}
-
-              <select
-                className="bg-slate-50 p-3 rounded-xl text-xs font-bold border border-slate-200"
-                value={formData.fur || ""}
-                onChange={(e) => handleChange("fur", e.target.value)}
-              >
-                <option value="">Furnishing</option>
-                <option>Unfurnished</option>
-                <option>Semi-Furnished</option>
-                <option>Fully Furnished</option>
-              </select>
-
-              <select
-                className="bg-slate-50 p-3 rounded-xl text-xs font-bold border border-slate-200"
-                value={formData.age || ""}
-                onChange={(e) => handleChange("age", e.target.value)}
-              >
-                <option value="">Property Age</option>
-                <option>0-1 Years</option>
-                <option>1-5 Years</option>
-                <option>5-10 Years</option>
-                <option>10-20 Years</option>
-              </select>
-            </div>
-          </section>
-          {/* LANDMARK */}
-          <section className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-              Nearest Landmark
-            </label>
-
-            <input
-              type="text"
-              placeholder="Example: Near City Centre Mall / Metro Station"
-              value={formData.landmark || ""}
-              onChange={(e) => handleChange("landmark", e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 
-               text-xs outline-none focus:border-orange-400 
-               focus:ring-2 focus:ring-orange-100 transition"
-            />
-          </section>
-
-          {/* DESCRIPTION */}
-          <section className="space-y-2">
-            <div className="flex justify-between items-center">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                Property Description
-              </label>
-
-              <span className="text-[10px] text-slate-400 font-bold">
-                {(formData.desc || "").length}/500
-              </span>
-            </div>
-            <textarea
-              rows="5"
-              maxLength={500}
-              placeholder="Describe the property... (size, amenities, location benefits, etc.)"
-              value={formData.desc || ""}
-              onChange={(e) => handleChange("desc", e.target.value)}
-              className="w-full border border-slate-200 rounded-2xl p-4 text-sm 
-             outline-none focus:border-orange-400 focus:ring-2 
-             focus:ring-orange-100 transition
-             resize-y min-h-[140px] max-h-[500px] overflow-auto"
-            />
-
-            <p className="text-[10px] text-slate-400">
-              Tip: Mention nearby schools, metro, hospitals, and property
-              highlights.
-            </p>
-          </section>
-
-          {/* AMENITIES */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-              <LayoutGrid size={14} /> Amenities
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {amenitiesList.map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    const current = formData.amenities || [];
-                    const next = current.includes(item)
-                      ? current.filter((i) => i !== item)
-                      : [...current, item];
-                    handleChange("amenities", next);
-                  }}
-                  className={`px-3 py-1.5 rounded-full text-[10px] font-bold border transition-colors ${
-                    formData.amenities?.includes(item)
-                      ? "bg-orange-500 text-white border-orange-500"
-                      : "bg-white text-slate-500 border-slate-200"
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </section>
-          {/* PROPERTY PRICE */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-              <Wallet size={14} /> Expected Price
-            </div>
-            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-              <input
-                type="number"
-                placeholder="Enter Expected Price (₹)"
-                value={formData.price || ""}
-                onChange={(e) => handleChange("price", e.target.value)}
-                className="w-full bg-transparent text-xs outline-none"
-              />
-            </div>
-          </section>
-          {/* --- NEW MEDIA SECTION --- */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-              <Camera size={14} /> Photos & Videos
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {/* Image Upload Trigger */}
-              <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 hover:bg-orange-50 hover:border-orange-300 transition-all cursor-pointer group">
-                <div className="bg-white p-2 rounded-full shadow-sm group-hover:scale-110 transition-transform">
-                  <Plus size={16} className="text-orange-500" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-400 mt-2 uppercase">
-                  Add Photo
-                </span>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleFileChange(e, "images")}
-                />
-              </label>
-
-              {/* Video Upload Trigger */}
-              <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 hover:bg-orange-50 hover:border-orange-300 transition-all cursor-pointer group">
-                <div className="bg-white p-2 rounded-full shadow-sm group-hover:scale-110 transition-transform">
-                  <Video size={16} className="text-orange-500" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-400 mt-2 uppercase">
-                  Add Video
-                </span>
-                <input
-                  type="file"
-                  accept="video/*"
-                  className="hidden"
-                  onChange={(e) => handleFileChange(e, "videos")}
-                />
-              </label>
-
-              {/* Image Previews */}
-              {formData.images?.map((img) => (
-                <div
-                  key={img.id}
-                  className="relative aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm"
-                >
-                  <img
-                    src={img.preview}
-                    className="w-full h-full object-cover"
-                    alt="preview"
-                  />
-                  <button
-                    onClick={() => removeMedia("images", img.id)}
-                    className="absolute top-1 right-1 bg-slate-900/80 text-white rounded-full p-1 hover:bg-red-500 transition-colors"
-                  >
-                    <X size={12} />
-                  </button>
-                </div>
-              ))}
-
-              {/* Video Previews */}
-              {formData.videos?.map((vid) => (
-                <div
-                  key={vid.id}
-                  className="relative aspect-square rounded-2xl bg-slate-900 flex items-center justify-center border border-slate-100 shadow-sm"
-                >
-                  <Video size={24} className="text-white/40" />
-                  <span className="absolute bottom-2 text-[8px] text-white/60 font-bold uppercase">
-                    Video Added
-                  </span>
-                  <button
-                    onClick={() => removeMedia("videos", vid.id)}
-                    className="absolute top-1 right-1 bg-white text-slate-900 rounded-full p-1 hover:bg-red-500 hover:text-white transition-colors"
-                  >
-                    <X size={12} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-          {/* --- DOCUMENT VERIFICATION SECTION --- */}
-          <section className="space-y-4 pt-6 border-t border-slate-100">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-              <ShieldCheck size={14} /> Upload Documents
-              {formData.documents?.aadhar && formData.documents?.sellDeed && (
-                <span className="text-[9px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">
-                  Eligible for Bhaiya Verified
-                </span>
-              )}
-            </div>
-
-            {/* --- BHAIYA VERIFIED PRO TIP --- */}
-            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-xs">
-              <div className="flex items-start gap-2">
-                <ShieldCheck size={16} className="text-emerald-600 mt-0.5" />
-
-                <div>
-                  <p className="font-bold text-emerald-700 uppercase tracking-wide text-[10px]">
-                    Bhaiya Verified Pro Tip
-                  </p>
-
-                  <p className="text-slate-600 mt-1 leading-relaxed">
-                    Want more buyers and faster deals? Get your property marked
-                    as{" "}
-                    <span className="font-bold text-emerald-700">
-                      “Bhaiya Verified”
-                    </span>
-                    .
-                  </p>
-
-                  <ul className="mt-2 space-y-1 text-[10px] text-slate-500">
-                    <li>• Upload a Utility Bill (Electricity/Water)</li>
-                    <li>• OR Front Page of Sale Deed</li>
-                    <li>• Ensure your details match your ID proof</li>
-                  </ul>
-
-                  <p className="text-[9px] text-slate-400 mt-2">
-                    Verified properties get higher trust, visibility & faster
-                    responses.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-              {[
-                { label: "Parcha", id: "parcha" },
-                { label: "Mutation", id: "mutation" },
-                { label: "Site Plan", id: "sitePlan" },
-                { label: "Sale Deed", id: "sellDeed" },
-                { label: "Aadhar Card", id: "aadhar" },
-                { label: "PAN Card", id: "pan" },
-              ].map((doc) => {
-                const fileData = formData.documents?.[doc.id];
-                const isImage = fileData?.type?.startsWith("image/");
-
-                return (
-                  <div key={doc.id} className="relative group">
-                    <label
-                      className={`aspect-[4/3] flex flex-col items-center justify-center border rounded-xl cursor-pointer transition overflow-hidden
-            ${
-              fileData
-                ? "border-green-200 bg-green-50"
-                : "border-dashed border-slate-200 bg-slate-50 hover:border-orange-300 hover:bg-orange-50"
-            }`}
-                    >
-                      {fileData ? (
-                        <div className="w-full h-full flex flex-col items-center justify-center relative p-2">
-                          {/* Preview */}
-                          {isImage ? (
-                            <img
-                              src={fileData.preview}
-                              alt={doc.label}
-                              className="absolute inset-0 w-full h-full object-cover opacity-25"
-                            />
-                          ) : (
-                            <FileText
-                              size={24}
-                              className="text-orange-500 mb-1"
-                            />
-                          )}
-
-                          {/* File Name */}
-                          <span className="text-[10px] font-semibold text-slate-700 text-center line-clamp-1 px-2 z-10">
-                            {fileData.name}
-                          </span>
-
-                          {/* Uploaded Badge */}
-                          <div className="flex items-center gap-1 mt-1 z-10">
-                            <Check size={12} className="text-green-600" />
-                            <span className="text-[9px] font-bold text-green-600 uppercase">
-                              Uploaded
-                            </span>
-                          </div>
-
-                          {/* Preview Button */}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              window.open(fileData.preview, "_blank");
-                            }}
-                            className="mt-2 text-[9px] font-semibold text-orange-600 bg-white px-2 py-1 rounded shadow-sm hover:bg-orange-50 z-10"
-                          >
-                            Preview
-                          </button>
-
-                          {/* Hover Change */}
-                          <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                            <span className="text-[10px] font-semibold bg-white px-2 py-1 rounded shadow">
-                              Change File
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="bg-white p-2 rounded-full shadow-sm group-hover:scale-110 transition">
-                            <Plus size={16} className="text-orange-500" />
-                          </div>
-                          <span className="text-[10px] font-semibold text-slate-400 mt-2 uppercase text-center px-2">
-                            {doc.label}
-                          </span>
-                        </>
-                      )}
-
-                      <input
-                        type="file"
-                        accept=".pdf,image/*"
-                        className="hidden"
-                        onChange={(e) =>
-                          handleFileChange(e, "documents", doc.id)
-                        }
-                      />
-                    </label>
-
-                    {/* Remove Button */}
-                    {fileData && (
-                      <button
-                        type="button"
-                        onClick={() => removeMedia("documents", doc.id)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600"
-                      >
-                        <X size={10} />
-                      </button>
-                    )}
+                    <div className="md:col-span-2">
+                       <InputField 
+                         label="Specific Address Details" 
+                         placeholder="Block, Floor, Flat No, Landmark..." 
+                         value={formData.address} 
+                         onChange={(e) => handleChange("address", e.target.value)} 
+                         icon={<MapPin size={20} className="text-slate-300"/>}
+                       />
+                    </div>
                   </div>
-                );
-              })}
-            </div>
-          </section>
-          {/* --- PREMIUM PROMOTION PLANS --- */}
-          <section className="space-y-4 pt-6 border-t border-slate-100">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-orange-600">
-                <ShieldCheck size={14} /> Choose Your Listing's Priority
-              </div>
-              <p className="text-[10px] text-slate-400 mt-1">
-                Select a plan to boost your visibility and get faster enquiries.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-              {[
-                {
-                  id: "free",
-                  label: "Basic Free",
-                  price: "₹0",
-                  validity: "7 Days",
-                  desc: "Basic listing in search results for casual sellers.",
-                  features: ["Standard Search", "3 Photos", "Owner Contact"],
-                },
-                {
-                  id: "best-deals",
-                  label: "Best Deals",
-                  price: "₹499",
-                  validity: "30 Days",
-                  badge: "Popular",
-                  desc: "Featured in the 'Best Deals' collection for quick visibility.",
-                  features: ["Verified Tag", "Social Media Blast", "10 Photos"],
-                },
-                {
-                  id: "feature",
-                  label: "Top Feature",
-                  price: "₹999",
-                  validity: "45 Days",
-                  badge: "Fast Sale",
-                  desc: "Pinned to the top of category pages to beat the competition.",
-                  features: ["Top of Search", "Google Indexing", "HD Video"],
-                },
-                {
-                  id: "high-value",
-                  label: "High Value",
-                  price: "₹1499",
-                  validity: "60 Days",
-                  badge: "Save 15%",
-                  desc: "Priority for institutional investors and high-budget buyers.",
-                  features: [
-                    "Investor Network",
-                    "Legal Advice",
-                    "Email Blasts",
-                  ],
-                },
-                {
-                  id: "best-buy",
-                  label: "Elite Buy",
-                  price: "₹1999",
-                  validity: "90 Days",
-                  badge: "Best Value",
-                  desc: "Maximum visibility + Homepage Banner for ultimate exposure.",
-                  features: [
-                    "Home Page Ads",
-                    "Pro Photoshoot",
-                    "Personal Manager",
-                  ],
-                },
-              ].map((plan) => {
-                const isSelected = formData.plan === plan.id;
-                return (
-                  <button
-                    key={plan.id}
-                    type="button"
-                    onClick={() => handleChange("plan", plan.id)}
-                    className={`relative p-4 rounded-3xl border-2 text-left transition-all flex flex-col h-full group ${
-                      isSelected
-                        ? "border-orange-500 bg-orange-50 ring-4 ring-orange-100/50"
-                        : "border-slate-100 bg-slate-50 hover:border-slate-200"
-                    }`}
-                  >
-                    {/* Header Section */}
-                    <div className="mb-2">
-                      <div className="flex justify-between items-center mb-1">
-                        <span
-                          className={`text-[7px] font-black uppercase px-2 py-0.5 rounded-full ${
-                            isSelected
-                              ? "bg-orange-500 text-white"
-                              : "bg-slate-200 text-slate-500"
-                          }`}
-                        >
-                          {plan.validity}
-                        </span>
-                        {plan.badge && (
-                          <span className="text-[7px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100 uppercase tracking-tighter">
-                            {plan.badge}
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-2">
-                        <span className="text-[10px] font-black text-slate-800 block uppercase tracking-tight">
-                          {plan.label}
-                        </span>
-                        <span className="text-xl font-black text-orange-600 block">
-                          {plan.price}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* The Descriptive Paragraph */}
-                    <p className="text-[9px] text-slate-400 font-medium leading-relaxed mb-4 min-h-[24px]">
-                      {plan.desc}
-                    </p>
-
-                    {/* Feature List - Single Line & Green Ticks */}
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mt-auto pt-3 border-t border-slate-200/60">
-                      {plan.features.map((feature, i) => (
-                        <div key={i} className="flex items-center gap-1">
-                          <div
-                            className={`flex-shrink-0 p-0.5 rounded-full ${
-                              isSelected
-                                ? "bg-emerald-500 text-white"
-                                : "bg-emerald-100 text-emerald-600"
-                            }`}
-                          >
-                            <Check size={6} strokeWidth={6} />
-                          </div>
-                          <span className="text-[7.5px] font-bold text-slate-500 whitespace-nowrap leading-none uppercase tracking-tighter group-hover:text-slate-900 transition-colors">
-                            {feature}
-                          </span>
+                  <button className="group w-full flex items-center justify-between p-7 rounded-[2.5rem] bg-indigo-50 border-2 border-indigo-100 hover:border-indigo-400 transition-all">
+                    <div className="flex items-center gap-5">
+                        <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                            <Navigation2 size={24} />
                         </div>
-                      ))}
-                    </div>
-
-                    {/* Selection Icon */}
-                    {isSelected && (
-                      <div className="absolute -top-2 -right-1">
-                        <div className="bg-orange-500 text-white rounded-full p-1 shadow-lg ring-2 ring-white">
-                          <Check size={10} strokeWidth={4} />
+                        <div className="text-left">
+                            <p className="text-[10px] font-black uppercase text-indigo-400 tracking-widest leading-none mb-1">GPS Mapping</p>
+                            <h4 className="text-sm lg:text-base font-black text-indigo-900 leading-none">Pin On Bhaiya Heat Map</h4>
                         </div>
-                      </div>
-                    )}
+                    </div>
+                    <ArrowUpRight size={24} className="text-indigo-300 group-hover:text-indigo-600" />
                   </button>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* Terms & Conditions */}
-          {/* --- SELLER AUTHORIZATION & DECLARATION --- */}
-          <section className="space-y-4 pt-6 border-t border-slate-100">
-            <div className="bg-orange-50/50 border border-orange-100 rounded-3xl p-5 lg:p-6">
-              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-orange-600 mb-4">
-                <ShieldCheck size={14} /> Seller Authorization & Declaration
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-[10px] text-slate-500 leading-relaxed font-medium">
-                  I, the undersigned, hereby declare that I am the legal owner
-                  (or authorized representative) of the property being listed. I
-                  grant{" "}
-                  <span className="text-slate-900 font-bold">
-                    Property Wala Bhaiya
-                  </span>{" "}
-                  the permission to:
-                </p>
-
-                {/* Checkbox 1 */}
-                <label className="flex items-start gap-3 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={formData.consentMedia || false}
-                    onChange={(e) =>
-                      handleChange("consentMedia", e.target.checked)
-                    }
-                    className="mt-0.5 accent-orange-600 w-3.5 h-3.5"
-                  />
-                  <span className="text-[10px] text-slate-600 font-bold group-hover:text-slate-900 transition-colors">
-                    Display property details, photos, and videos on their
-                    platform and social media handles.
-                  </span>
-                </label>
-
-                {/* Checkbox 2 */}
-                <label className="flex items-start gap-3 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={formData.consentContact || false}
-                    onChange={(e) =>
-                      handleChange("consentContact", e.target.checked)
-                    }
-                    className="mt-0.5 accent-orange-600 w-3.5 h-3.5"
-                  />
-                  <span className="text-[10px] text-slate-600 font-bold group-hover:text-slate-900 transition-colors">
-                    Share my contact information with verified and interested
-                    buyers/tenants.
-                  </span>
-                </label>
-
-                {/* Constant Info */}
-                <div className="flex items-start gap-3 pl-0.5">
-                  <Check
-                    size={14}
-                    className="text-orange-500 mt-0.5 flex-shrink-0"
-                  />
-                  <span className="text-[10px] text-slate-500 italic">
-                    Contact me via WhatsApp/SMS/Call regarding status updates
-                    and inquiries.
-                  </span>
                 </div>
+              )}
 
-                <p className="text-[9px] text-slate-400 mt-4 pt-3 border-t border-orange-100/50 leading-relaxed">
-                  I confirm that the information provided is 100% accurate and
-                  that I have the right to sell/lease this property. I
-                  understand that providing false information will lead to a
-                  permanent ban.
-                </p>
-              </div>
-            </div>
-          </section>
+              {/* --- STEP 2: SPECS --- */}
+              {step === 2 && (
+                <div className="space-y-10">
+                  <SectionHeader icon={<Microscope />} title="Micro Configuration" sub="Precise specifications and room details." />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <ChoiceGroup labels="BHK Type" value={formData.bhk} choices={["1", "2", "3", "3+1", "4+"]} onChange={(v) => handleChange("bhk", v)} />
+                    <InputField label="Floor No." placeholder="e.g. 4" type="number" value={formData.floor} onChange={(e) => handleChange("floor", e.target.value)} />
+                    <InputField label="Total Floors" placeholder="e.g. 10" type="number" value={formData.totalFloors} onChange={(e) => handleChange("totalFloors", e.target.value)} />
+                    
+                    <div className="md:col-span-2 flex gap-4">
+                        <div className="flex-1">
+                            <InputField label="Carpet Area" placeholder="Value" type="number" value={formData.area} onChange={(e) => handleChange("area", e.target.value)} icon={<Ruler size={18}/>} />
+                        </div>
+                        <div className="w-28 mt-8">
+                            <ModernSelect value={formData.unit || "Sq.Ft"} options={["Sq.Ft", "Sq.Yd", "Katha"]} onChange={(v) => handleChange("unit", v)} />
+                        </div>
+                    </div>
 
-          {/* --- FINAL CONSENT & SUBMIT --- */}
-          <div className="space-y-6 pt-4">
-            <div className="flex items-start gap-2 text-xs">
-              <input
-                type="checkbox"
-                id="finalTerms"
-                checked={formData.terms || false}
-                onChange={(e) => handleChange("terms", e.target.checked)}
-                className="mt-1 accent-orange-600"
-              />
-              <label
-                htmlFor="finalTerms"
-                className="text-slate-600 leading-relaxed font-bold cursor-pointer"
+                    <ModernSelect label="Parking Slot" value={formData.parking} options={["Covered", "Basement", "Open", "None"]} onChange={(v) => handleChange("parking", v)} />
+                    
+                    <ChoiceGroup labels="Furnishing" value={formData.furnishing} choices={["Unfurnished", "Semi", "Full"]} onChange={(v) => handleChange("furnishing", v)} />
+                    <ModernSelect label="Facing" value={formData.facing} options={["North", "East", "West", "South", "North-East"]} onChange={(v) => handleChange("facing", v)} icon={<Compass size={14}/>}/>
+                    <InputField label="Bathrooms" placeholder="e.g. 2" type="number" value={formData.bathrooms} onChange={(e) => handleChange("bathrooms", e.target.value)} icon={<Bath size={14}/>} />
+                    
+                    <div className="md:col-span-3 grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <ModernSelect label="View" value={formData.view} options={["Garden", "Main Road", "Pool", "City"]} onChange={(v) => handleChange("view", v)} icon={<Trees size={14}/>}/>
+                        <ModernSelect label="Kitchen" value={formData.kitchen} options={["Modular", "Regular", "L-Shape", "U-Shape"]} onChange={(v) => handleChange("kitchen", v)} icon={<Zap size={14}/>}/>
+                        <ModernSelect label="Utility" value={formData.utility} options={["Yes", "No"]} onChange={(v) => handleChange("utility", v)} />
+                        <ModernSelect label="Gas" value={formData.gas} options={["Pipeline", "Cylinder", "None"]} onChange={(v) => handleChange("gas", v)} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* --- STEP 3: PRICE --- */}
+              {step === 3 && (
+                <div className="space-y-10">
+                  <SectionHeader icon={<Wallet />} title="Valuation & Timeline" sub="Financial clarity and possession dates." />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div className="md:col-span-2">
+                        <div className="relative">
+                            <InputField 
+                                label="Listing Amount / Monthly Rent" 
+                                placeholder="Enter value" 
+                                type="number" 
+                                value={formData.price} 
+                                onChange={(e) => handleChange("price", e.target.value)} 
+                                icon={<span className="font-black text-sm text-dark-orange">₹</span>}
+                            />
+                            {formData.price && (
+                                <div className="absolute top-1 right-2 text-[10px] lg:text-xs font-black text-dark-orange uppercase bg-orange-50 px-4 py-1.5 rounded-full border border-orange-200 italic shadow-sm">
+                                    {inWords(formData.price)}
+                                </div>
+                            )}
+                        </div>
+
+                        {priceTip && (
+                            <motion.div 
+                                initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+                                className={`mt-6 p-7 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-7 border-2 ${
+                                    priceTip.type === 'high' ? 'bg-orange-50 border-orange-100 text-orange-900' : 'bg-green-50 border-green-100 text-green-900'
+                                }`}
+                            >
+                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${
+                                    priceTip.type === 'high' ? 'bg-orange-600' : 'bg-green-600'
+                                } text-white shadow-xl`}>
+                                    {priceTip.type === 'high' ? <Zap size={28}/> : <Sparkles size={28}/>}
+                                </div>
+                                <div className="text-center md:text-left">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-60">Listing Strategy</p>
+                                    <h4 className="text-sm lg:text-[15px] font-black uppercase tracking-tight leading-tight">{priceTip.text}</h4>
+                                </div>
+                            </motion.div>
+                        )}
+                    </div>
+
+                    <InputField label="Maintenance" placeholder="₹ per month" type="number" value={formData.maintenance} onChange={(e) => handleChange("maintenance", e.target.value)} />
+                    <ModernSelect label="Negotiable?" value={formData.negotiable} options={["Fixed", "Slightly", "Open to Offers"]} onChange={(v) => handleChange("negotiable", v)} />
+                    
+                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <ModernSelect label="Possession" value={formData.possession} options={["Ready to Move", "Within 3 Months", "Under Construction"]} onChange={(v) => handleChange("possession", v)} icon={<Key size={14}/>}/>
+                        <InputField label="Available From" type="date" value={formData.availableFrom} onChange={(e) => handleChange("availableFrom", e.target.value)} icon={<Calendar size={18}/>} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* --- STEP 4: AMENITIES --- */}
+              {step === 4 && (
+                <div className="space-y-10">
+                  <SectionHeader icon={<Sparkles />} title="Plus Factors" sub="Lifestyle amenities and community features." />
+                   
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                        {n: "Power Backup", i: <Zap size={20}/>},
+                        {n: "Gated Security", i: <Shield size={20}/>},
+                        {n: "Lift / Elevator", i: <ArrowUpRight size={20}/>},
+                        {n: "Private Gym", i: <Layers size={20}/>},
+                        {n: "Swimming Pool", i: <Trees size={20}/>},
+                        {n: "Clubhouse", i: <Home size={20}/>},
+                        {n: "Gas Pipeline", i: <CheckCircle2 size={20}/>},
+                        {n: "Servant Room", i: <FileText size={20}/>}
+                    ].map(amenity => {
+                        const isSel = (formData.amenities || []).includes(amenity.n);
+                        return (
+                            <button
+                                key={amenity.n}
+                                type="button"
+                                onClick={() => {
+                                    const next = isSel ? formData.amenities.filter(a => a !== amenity.n) : [...(formData.amenities || []), amenity.n];
+                                    handleChange("amenities", next);
+                                }}
+                                className={`p-6 lg:p-8 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-4 text-center ${
+                                    isSel ? 'border-dark-orange bg-orange-50 text-dark-orange shadow-lg' : 'border-slate-50 bg-slate-50 text-slate-400 hover:border-slate-200'
+                                }`}
+                            >
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isSel ? 'bg-dark-orange text-white' : 'bg-white text-slate-300'}`}>
+                                    {amenity.i}
+                                </div>
+                                <span className="text-[10px] lg:text-[11px] font-black uppercase tracking-tight">{amenity.n}</span>
+                            </button>
+                        );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* --- STEP 5: MEDIA --- */}
+              {step === 5 && (
+                <div className="space-y-10">
+                  <SectionHeader icon={<Camera />} title="Reality Media" sub="Visual proof and descriptive narrative." />
+                  
+                  <div className="p-8 rounded-[2.5rem] bg-indigo-50 border border-indigo-100 flex gap-6 items-start">
+                    <CloudSun size={32} className="text-indigo-600 shrink-0" />
+                    <div>
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-indigo-900 mb-1">Bhaiya Standard</h4>
+                        <p className="text-[12px] lg:text-[13px] text-indigo-600 font-medium leading-relaxed">Upload at least 5 photos showing <span className="font-black text-indigo-900">Living Room, Kitchen, and Washroom</span> to build maximum trust.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+                     <label className="aspect-square rounded-[2rem] border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center cursor-pointer hover:border-dark-orange hover:bg-orange-50 transition-all group">
+                        <Plus size={24} className="text-slate-300 group-hover:text-dark-orange transition-colors" />
+                        <span className="text-[10px] font-black text-slate-400 mt-2 uppercase tracking-tighter">Add Media</span>
+                        <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => {
+                            const files = Array.from(e.target.files).map(f => URL.createObjectURL(f));
+                            handleChange("images", [...(formData.images || []), ...files]);
+                        }} />
+                     </label>
+
+                     {(formData.images || []).map((img, i) => (
+                       <div key={i} className="relative aspect-square rounded-[2rem] overflow-hidden border border-white group shadow-lg">
+                         <img src={img} alt="preview" className="w-full h-full object-cover" />
+                         <button onClick={() => handleChange("images", formData.images.filter((_, idx) => idx !== i))} className="absolute top-2 right-2 p-2 bg-slate-900/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                           <X size={10} />
+                         </button>
+                       </div>
+                     ))}
+                  </div>
+
+                  <div className="space-y-6">
+                    <InputField label="Virtual Tour Link" placeholder="YouTube / Vimeo URL" value={formData.videoLink} onChange={(e) => handleChange("videoLink", e.target.value)} icon={<Video size={20} className="text-slate-300"/>} />
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Property Description</label>
+                       <textarea 
+                        rows={5}
+                        placeholder="Tell us what makes your home special... e.g. Sun-facing balcony, recently renovated kitchen."
+                        value={formData.description}
+                        onChange={(e) => handleChange("description", e.target.value)}
+                        className="w-full p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100 text-[13px] font-bold text-slate-800 outline-none focus:bg-white focus:border-dark-orange transition-all h-40 resize-none"
+                       />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* --- STEP 6: FINAL --- */}
+              {step === 6 && (
+                <div className="space-y-10">
+                  <SectionHeader icon={<ShieldCheck />} title="Legal Standing" sub="Authenticity check and verification boost." />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                     <ModernSelect label="Ownership Type" value={formData.ownership} options={["Registry (Freehold)", "PoA", "Leasehold", "Power of Attorney"]} onChange={(v) => handleChange("ownership", v)} icon={<FileText size={14}/>}/>
+                     <InputField label="RERA Number" placeholder="Mandatory for Agents/Builders" value={formData.rera} onChange={(e) => handleChange("rera", e.target.value)} icon={<CheckCircle2 size={18} className="text-slate-300"/>} />
+                     
+                     <div className="md:col-span-2">
+                        <button 
+                          type="button"
+                          onClick={() => handleChange("honestyCheck", !formData.honestyCheck)}
+                          className={`w-full flex gap-6 p-8 rounded-[2.5rem] border-2 transition-all text-left ${formData.honestyCheck ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-100'}`}
+                        >
+                          <div className={`mt-1 w-8 h-8 rounded-xl border-2 flex items-center justify-center shrink-0 transition-all ${formData.honestyCheck ? 'bg-green-600 border-green-600' : 'border-slate-400'}`}>
+                            {formData.honestyCheck && <Check size={16} className="text-white" strokeWidth={5} />}
+                          </div>
+                          <div>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-slate-900 mb-1 leading-none">The Honesty Oath</h4>
+                            <p className="text-[11px] lg:text-[12px] text-slate-500 font-medium leading-relaxed">I certify that these details are real and I am legally authorized to list this property. I will update the status immediately once the property is sold or leased.</p>
+                          </div>
+                        </button>
+                     </div>
+
+                     <div className="md:col-span-2 pt-4">
+                        <div className="p-10 rounded-[3rem] bg-slate-900 text-white relative overflow-hidden group">
+                           <div className="absolute top-0 right-0 w-64 h-64 bg-dark-orange/10 rounded-full blur-[120px] -mr-32 -mt-32"></div>
+                           <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10">
+                              <div className="w-20 h-20 rounded-3xl bg-dark-orange/20 border border-dark-orange shadow-2xl flex items-center justify-center shrink-0">
+                                <ShieldCheck size={40} className="text-dark-orange" />
+                              </div>
+                              <div className="flex-1 text-center lg:text-left">
+                                <h3 className="text-2xl font-black mb-3 text-white uppercase tracking-tight">Boost Visibility 3x</h3>
+                                <p className="text-sm text-slate-400 font-medium leading-relaxed uppercase tracking-tighter">Get "Bhaiya Verified" tag for only ₹499 and appear at the top of local search results.</p>
+                              </div>
+                              <button type="button" className="px-10 py-5 rounded-2xl bg-dark-orange text-white text-[12px] font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all">Get Verified</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* --- NAV BAR --- */}
+          <div className="flex items-center justify-between mt-16 pt-12 border-t border-slate-50">
+            <button 
+              type="button" 
+              onClick={prevStep} 
+              className={`flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] transition-all group ${step === 1 ? 'opacity-0 pointer-events-none' : 'text-slate-400 hover:text-dark-orange'}`}
+            >
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-dark-orange group-hover:text-white transition-all"><ChevronLeft size={18} /></div> Back
+            </button>
+
+            {step < totalSteps ? (
+              <button 
+                type="button"
+                onClick={nextStep}
+                className="px-12 py-5 rounded-[1.5rem] bg-slate-900 text-white text-[11px] lg:text-[12px] font-black uppercase tracking-[0.25em] shadow-2xl active:scale-95 transition-all flex items-center gap-4 hover:shadow-slate-200"
               >
-                I Agree to the{" "}
-                <span className="text-orange-600 underline">
-                  Terms & Condition
-                </span>{" "}
-                and Grant Consent
-              </label>
-            </div>
-
-            <div className="flex justify-center">
-              <button
-                onClick={onSubmit}
-                disabled={
-                  !formData.terms ||
-                  !formData.consentMedia ||
-                  !formData.consentContact
-                }
-                className={`px-10 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] 
-        flex items-center gap-3 shadow-lg transition-all active:scale-95
-        ${
-          formData.terms && formData.consentMedia && formData.consentContact
-            ? "bg-orange-600 text-white hover:bg-orange-700 shadow-orange-200"
-            : "bg-slate-300 text-slate-500 cursor-not-allowed"
-        }`}
-              >
-                Post Property
-                <ChevronRight size={18} />
+                Proceed Next <ChevronRight size={20} />
               </button>
-            </div>
+            ) : (
+              <button 
+                type="button"
+                onClick={onSubmit}
+                className="px-12 py-5 rounded-[1.5rem] bg-dark-orange text-white text-[11px] lg:text-[12px] font-black uppercase tracking-[0.25em] shadow-2xl shadow-orange-300 active:scale-95 transition-all flex items-center gap-4 hover:bg-slate-900"
+              >
+                Post Listing <Sparkles size={20} />
+              </button>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+// --- MICRO COMPONENTS STYLED FOR GLOBAL CONSISTENCY ---
+
+function SectionHeader({ icon, title, sub }) {
+  return (
+    <div className="flex items-start gap-6">
+      <div className="w-16 h-16 rounded-[1.5rem] bg-orange-50 text-dark-orange flex items-center justify-center shrink-0 shadow-sm border border-orange-100">
+        {React.cloneElement(icon, { size: 32 })}
+      </div>
+      <div>
+        <h3 className="text-3xl font-black text-slate-900 tracking-tight leading-tight uppercase">{title}</h3>
+        <p className="text-[10px] lg:text-[11px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1">{sub}</p>
+      </div>
+    </div>
+  );
+}
+
+function InputField({ label, icon, subLabel, ...props }) {
+    return (
+      <div className="space-y-3 group">
+        <label className="text-[10px] lg:text-[11px] font-black uppercase text-slate-400 tracking-widest ml-1 group-focus-within:text-dark-orange transition-colors">{label}</label>
+        <div className="relative">
+          <input {...props} className="w-full pl-6 pr-14 py-5 rounded-2xl bg-slate-50 border border-slate-100 text-[13px] font-bold text-slate-800 outline-none focus:bg-white focus:border-dark-orange transition-all placeholder:text-slate-300 shadow-sm" />
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-dark-orange transition-colors">{icon}</div>
+        </div>
+      </div>
+    );
+  }
+  
+  function ChoiceGroup({ labels, value, choices, onChange }) {
+    return (
+      <div className="space-y-3">
+        <label className="text-[10px] lg:text-[11px] font-black uppercase text-slate-400 tracking-widest ml-1">{labels}</label>
+        <div className="flex flex-wrap gap-2">
+          {choices.map(c => (
+              <button 
+                  key={c} type="button" onClick={() => onChange(c)}
+                  className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border-2 transition-all ${
+                      value === c ? 'bg-dark-orange text-white border-dark-orange shadow-lg' : 'bg-white text-slate-400 border-slate-50 hover:border-slate-200'
+                  }`}
+              >
+                  {c}
+              </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  
+  function ModernSelect({ label, value, options, onChange, icon }) {
+    return (
+      <div className="space-y-3 group">
+        {label && <label className="text-[10px] lg:text-[11px] font-black uppercase text-slate-400 tracking-widest ml-1">{label}</label>}
+        <div className="relative">
+          <select 
+              value={value} onChange={(e) => onChange(e.target.value)}
+              className="w-full pl-6 pr-12 py-5 rounded-2xl bg-slate-50 border border-slate-100 text-[13px] font-black text-slate-800 outline-none focus:bg-white focus:border-dark-orange appearance-none transition-all shadow-sm"
+          >
+              <option value="">{label ? `Select ${label}` : "Select"}</option>
+              {options.map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+          <div className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-dark-orange pointer-events-none">
+              {icon || <ChevronRight size={18} className="rotate-90" />}
+          </div>
+        </div>
+      </div>
+    )
+  }
