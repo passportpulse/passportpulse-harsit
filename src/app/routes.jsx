@@ -44,6 +44,7 @@ export const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "/expert-advice", element: <ExpertAdvice /> },
       { path: "/auction", element: <AuctionTab /> },
+      { path: "/add-property", element: <Sell /> },
     ],
   },
 ]);

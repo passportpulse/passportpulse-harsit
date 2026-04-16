@@ -5,10 +5,12 @@ import {
   Calendar, ShieldCheck, TrendingUp, Lock, Zap, Clock, ChevronRight, X, ArrowRight,
   FileText, Upload, IdCard, Headset
 } from "lucide-react";
+import OnboardingModal from "../../components/modals/OnboardingModal";
 
 export default function SellerRegister() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [formData, setFormData] = useState({
     mobile: "",
     identity: "Individual Owner", // default
@@ -32,11 +34,17 @@ export default function SellerRegister() {
 
   const nextStep = (e) => {
     if (e) e.preventDefault();
-    setStep(step + 1);
+    if (step === 2) {
+      sessionStorage.setItem("bhaiya_role", "seller");
+      setShowOnboarding(true);
+    } else {
+      setStep(step + 1);
+    }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 font-poppins py-10 antialiased relative">
+      <OnboardingModal isOpen={showOnboarding} onClose={() => navigate("/dashboard")} role="seller" />
       <div className="max-w-6xl mx-auto px-6">
         
         {/* Navigation */}
@@ -415,10 +423,6 @@ export default function SellerRegister() {
           </div>
         )}
 
-        {/* Step 3: Quick-Start Guide Pop-Up Modal */}
-        {step === 3 && (
-          <OnboardingModal onClose={() => navigate("/dashboard")} name={formData.name} />
-        )}
 
         {/* Request Demo Section */}
         <div className="mt-24 pt-12 border-t border-slate-200">
@@ -432,46 +436,6 @@ export default function SellerRegister() {
           </div>
         </div>
 
-      </div>
-    </div>
-  );
-}
-
-{/* Onboarding Guide Modal */}
-function OnboardingModal({ onClose, name }) {
-  const [slide, setSlide] = useState(0);
-  const slides = [
-    { title: "High-Quality Photos", desc: "Listings with well-lit, wide-angle photos sell 4x faster. Open all curtains and turn on lights before snapping.", icon: "📸" },
-    { title: "Accurate Pricing", desc: "Overpriced homes sit empty. Use the Bhaiya Heat Map to find the sweet spot for your neighborhood.", icon: "🎯" },
-    { title: "Detailed Description", desc: "Highlight neighborhood perks! Is there a great school nearby? A new metro station? Tell the buyers.", icon: "📝" },
-    { title: "Be Responsive", desc: "Reply quickly to inquiries. Our algorithm boosts owners who respond to leads within 1 hour.", icon: "⚡" },
-  ];
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
-      <div className="w-full max-w-lg bg-white rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
-        <div className="bg-dark-orange px-6 py-4 flex justify-between items-center text-white">
-          <div className="text-xs font-black uppercase tracking-widest">Seller Success Guide</div>
-          <button onClick={onClose} className="hover:bg-white/20 p-1 rounded-full transition-all"><X size={18} /></button>
-        </div>
-        <div className="p-10 text-center min-h-[280px] flex flex-col justify-center items-center relative">
-          <div className="text-6xl mb-6">{slides[slide].icon}</div>
-          <h2 className="text-2xl font-black text-slate-900 mb-3">{slides[slide].title}</h2>
-          <p className="text-sm text-slate-500 font-medium leading-relaxed px-4">{slides[slide].desc}</p>
-          <div className="absolute bottom-4 flex gap-2">
-            {slides.map((_, i) => (
-              <div key={i} className={`w-2 h-2 rounded-full ${i === slide ? 'bg-dark-orange' : 'bg-slate-200'}`} />
-            ))}
-          </div>
-        </div>
-        <div className="p-6 border-t border-slate-100 flex justify-between items-center bg-slate-50">
-          <button onClick={() => slide > 0 && setSlide(slide - 1)} className={`text-xs font-bold uppercase tracking-wider ${slide === 0 ? 'text-slate-300 pointer-events-none' : 'text-slate-500 hover:text-slate-800'}`}>Back</button>
-          {slide < slides.length - 1 ? (
-             <button onClick={() => setSlide(slide + 1)} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider hover:bg-black transition-all">Next Rule <ArrowRight size={14} /></button>
-          ) : (
-             <button onClick={onClose} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-dark-orange text-white text-xs font-black uppercase tracking-wider hover:bg-orange-600 transition-all shadow-md">Let's Go! <ArrowRight size={14} /></button>
-          )}
-        </div>
       </div>
     </div>
   );

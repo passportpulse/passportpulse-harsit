@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Section from "../../components/layout/Section";
 import Container from "../../components/layout/Container";
+import BuyerDashboard from "./BuyerDashboard";
+import SellerDashboard from "./SellerDashboard";
+import DeveloperDashboard from "./DeveloperDashboard";
+import PartnerDashboard from "./PartnerDashboard";
 
 const services = [
   {
@@ -44,7 +48,23 @@ const services = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [role, setRole] = useState(null);
 
+  useEffect(() => {
+    // Check for role in sessionStorage (set during registration)
+    const storedRole = sessionStorage.getItem("bhaiya_role");
+    if (storedRole) {
+      setRole(storedRole);
+    }
+  }, []);
+
+  // Return specialized dashboard if role is set
+  if (role === "seller") return <SellerDashboard />;
+  if (role === "buyer") return <BuyerDashboard />;
+  if (role === "developer") return <DeveloperDashboard />;
+  if (role === "expert") return <PartnerDashboard />;
+
+  // Default Portal Landing Page
   return (
     <Section className="bg-[#fcfcfd] mt-0 pt-6 lg:mt-0 ">
       <Container>
@@ -85,12 +105,10 @@ export default function Dashboard() {
           w-fit
         "
               >
-                {/* Shield icon style for security/login context */}
                 <div className="flex items-center gap-0.5">
                   <ShieldCheck className="w-4 h-4 text-white group-hover:text-orange-600" />
                 </div>
 
-                {/* Rating text changed to status text */}
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] lg:text-[11px] font-black tracking-widest uppercase">
                     Encrypted Login Access
@@ -102,72 +120,65 @@ export default function Dashboard() {
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="group relative p-6 md:p-8 rounded-4xl bg-white border border-slate-200 hover:border-slate-300 transition-all duration-300 flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex justify-between items-start mb-6">
-                  <div className="text-3xl">{service.icon}</div>
-                  <span className="relative overflow-hidden text-sm text-white bg-green-700 px-2 py-1 rounded-lg">
-                    {service.tag}
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="portals">
+          {services.map((service, index) => {
+             const roleMap = {
+                "Buyer Login": "buyer",
+                "Seller Login": "seller",
+                "Partner Login": "buyer", 
+                "Developer Login": "developer",
+                "Expert Login": "expert"
+             };
+             const selectedRole = roleMap[service.loginText];
 
-                    {/* SHINE LAYER */}
-                    <span
-                      className="absolute inset-0 w-full h-full"
-                      style={{
-                        background:
-                          "linear-gradient(120deg, transparent 25%, rgba(255, 255, 255, 0.3) 50%, transparent 75%)",
-                        backgroundSize: "200% 100%",
-                        animation: "shine 2s linear infinite",
-                      }}
-                    />
-                  </span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2">
-                  {service.title}
-                </h3>
-                <p className="text-slate-500 text-xs md:text-sm leading-relaxed mb-8">
-                  {service.desc}
-                </p>
-              </div>
-
-              {/* SOBER GREEN BUTTON */}
-              <button
-                onClick={() => navigate(`/login?role=${service.loginText}`)}
-                className="
-                  relative overflow-hidden
-                  w-full flex items-center justify-between
-                  pl-5 pr-2 py-3 rounded-xl
-                  bg-dark-orange text-white
-                  text-[10px] font-black uppercase tracking-widest
-                  hover:bg-lighter-orange transition-colors duration-300
-                  group/btn
-                "
-              >
-                <span className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-white" />
-                  {service.loginText}
-                </span>
-
-                <div className="bg-white/10 p-1.5 rounded-lg">
-                  <ArrowRight className="w-4 h-4 text-white" />
-                </div>
-
-                {/* INTERACTIVE SHINE: Only runs once on hover */}
-                <span
-                  className="absolute inset-0 w-full h-full -translate-x-full group-hover/btn:animate-[shine_0.75s_ease-in-out] pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent)",
-                  }}
-                />
-              </button>
-            </div>
-          ))}
+             return (
+               <div
+                 key={index}
+                 onClick={() => {
+                    sessionStorage.setItem("bhaiya_role", selectedRole);
+                    setRole(selectedRole);
+                 }}
+                 className="group relative p-6 md:p-8 rounded-4xl bg-white border border-slate-200 hover:border-dark-orange hover:shadow-2xl hover:shadow-orange-100/50 transition-all duration-300 flex flex-col justify-between cursor-pointer"
+               >
+                 <div>
+                   <div className="flex justify-between items-start mb-6">
+                     <div className="text-3xl lg:text-4xl group-hover:scale-110 transition-transform duration-500">{service.icon}</div>
+                     <span className="relative overflow-hidden text-[10px] font-black uppercase tracking-widest text-white bg-slate-900 group-hover:bg-dark-orange px-3 py-1.5 rounded-lg transition-colors">
+                       {service.tag}
+                     </span>
+                   </div>
+   
+                   <h3 className="text-lg md:text-xl font-black text-slate-800 mb-2 uppercase tracking-tight">
+                     {service.title}
+                   </h3>
+                   <p className="text-slate-500 text-xs md:text-sm leading-relaxed mb-8 font-medium">
+                     {service.desc}
+                   </p>
+                 </div>
+   
+                 <button
+                   className="
+                     relative overflow-hidden
+                     w-full flex items-center justify-between
+                     pl-5 pr-2 py-4 rounded-xl
+                     bg-slate-50 group-hover:bg-dark-orange text-slate-400 group-hover:text-white
+                     text-[10px] font-black uppercase tracking-widest
+                     transition-all duration-300
+                     group/btn
+                   "
+                 >
+                   <span className="flex items-center gap-2">
+                     <ShieldCheck className="w-4 h-4" />
+                     {service.loginText}
+                   </span>
+   
+                   <div className="bg-slate-200 group-hover:bg-white/10 p-1.5 rounded-lg transition-colors">
+                     <ArrowRight className="w-4 h-4" />
+                   </div>
+                 </button>
+               </div>
+             );
+          })}
         </div>
       </Container>
     </Section>

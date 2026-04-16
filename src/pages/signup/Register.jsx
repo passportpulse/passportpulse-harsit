@@ -4,6 +4,7 @@ import DeveloperRegister from "./DeveloperRegister";
 import BuyerRegister from "./BuyerRegister";
 import SellerRegister from "./SellerRegister";
 import AgentRegister from "./AgentRegister";
+import PartnerApplicationForm from "../partner-application-form/PartnerApplicationForm";
 
 export default function Register() {
   const [searchParams] = useSearchParams();
@@ -28,6 +29,10 @@ export default function Register() {
 
     if (userType === "seller") {
       return <SellerRegister />;
+    }
+
+    if (userType === "expert") {
+      return <PartnerApplicationForm />;
     }
 
     if (userType === "partner" || userType === "agent") {

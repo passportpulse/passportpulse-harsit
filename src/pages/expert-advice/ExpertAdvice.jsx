@@ -159,12 +159,35 @@ export default function ExpertAdvice() {
             <div className="text-center">
               <button
                 type="submit"
-                className="inline-flex px-6 items-center justify-center bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl font-semibold text-sm transition-all"
+                className="inline-flex px-12 items-center justify-center bg-dark-orange hover:bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-orange-100 active:scale-95"
               >
                 Get My ROI Report
               </button>
             </div>
           </form>
+        </div>
+
+        {/* JOIN PANEL CTA */}
+        <div className="mt-20 max-w-4xl mx-auto">
+          <div className="bg-slate-900 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+             <div className="absolute bottom-0 right-0 w-64 h-64 bg-dark-orange/10 rounded-full blur-3xl -mr-20 -mb-20"></div>
+             <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+                <div className="text-center md:text-left">
+                   <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight leading-none mb-4 uppercase">
+                      Are you a <span className="text-dark-orange">Professional?</span>
+                   </h2>
+                   <p className="text-slate-400 text-sm md:text-base font-medium max-w-md">
+                      Join West Bengal's most elite real estate advisory network. Scale your practice with verified high-intent leads.
+                   </p>
+                </div>
+                <button 
+                  onClick={() => window.location.href='/partner-application-form'}
+                  className="px-12 py-5 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-dark-orange hover:text-white transition-all shadow-2xl active:scale-95 whitespace-nowrap"
+                >
+                   Apply for Panel
+                </button>
+             </div>
+          </div>
         </div>
       </Container>
     </Section>

@@ -5,10 +5,12 @@ import {
   Star, Bell, Calendar, Mail, Hash, MessageSquare, Heart, ChevronRight,
   TrendingUp, PartyPopper, Headset
 } from "lucide-react";
+import OnboardingModal from "../../components/modals/OnboardingModal";
 
 export default function BuyerRegister() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -36,7 +38,12 @@ export default function BuyerRegister() {
 
   const nextStep = (e) => {
     if (e) e.preventDefault();
-    setStep(step + 1);
+    if (step === 2) {
+      sessionStorage.setItem("bhaiya_role", "buyer");
+      setShowOnboarding(true);
+    } else {
+      setStep(step + 1);
+    }
   };
 
   const formatBudget = (val) => {
@@ -47,6 +54,7 @@ export default function BuyerRegister() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-poppins py-10 antialiased">
+      <OnboardingModal isOpen={showOnboarding} onClose={() => navigate("/dashboard")} role="buyer" />
       <div className="max-w-6xl mx-auto px-6">
         
         {/* Navigation */}
@@ -309,17 +317,6 @@ export default function BuyerRegister() {
                 <button type="submit" className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-slate-900 text-white text-sm font-black uppercase tracking-[0.15em] shadow-xl hover:bg-black active:scale-[0.98] transition-all">Complete Setup <ChevronRight size={18} /></button>
               </form>
             </div>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="animate-in zoom-in-95 duration-700 flex flex-col items-center justify-center text-center h-full max-w-lg mx-auto py-20">
-            <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-6 shadow-xl shadow-orange-100/50">
-              <PartyPopper size={40} className="text-dark-orange" />
-            </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-4">Welcome to the Family, <br/><span className="text-dark-orange text-4xl mt-2 block">{formData.name || "Buyer"}!</span></h1>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed mb-8">Bhaiya is now officially on the hunt for your perfect home. Check your WhatsApp for a curated list of top-rated properties {formData.city && `in ${formData.city}`}!</p>
-            <button onClick={() => navigate("/dashboard")} className="px-8 py-4 rounded-xl bg-dark-orange text-white text-sm font-black uppercase tracking-[0.15em] shadow-xl hover:bg-black transition-all transform active:scale-95">GO TO MY DASHBOARD</button>
           </div>
         )}
 

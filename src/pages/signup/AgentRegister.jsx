@@ -7,9 +7,12 @@ import {
   Shield, Box, Plus, Info, Headset, Target, PartyPopper
 } from "lucide-react";
 
+import OnboardingModal from "../../components/modals/OnboardingModal";
+
 export default function AgentRegister() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [formData, setFormData] = useState({
     identity: "Individual Agent", // Individual Agent or Brokerage Firm
     name: "",
@@ -59,6 +62,7 @@ export default function AgentRegister() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-poppins py-10 antialiased relative selection:bg-orange-100">
+      <OnboardingModal isOpen={showOnboarding} onClose={() => navigate("/dashboard")} role="seller" />
       <div className="max-w-6xl mx-auto px-6">
         
         {/* Navigation */}
@@ -394,7 +398,10 @@ export default function AgentRegister() {
             <div className="mt-16 bg-slate-100/50 rounded-[3rem] p-12 text-center border border-slate-200 shadow-inner">
                <h2 className="text-2xl font-black text-slate-900 mb-2">Final Step: Activation</h2>
                <p className="text-sm text-slate-500 mb-8 font-medium">Click below to generate your unique Partner ID and access the 'War Room' Dashboard.</p>
-               <button onClick={() => setStep(4)} className="px-16 py-5 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-[0.3em] hover:bg-black shadow-2xl transition-all transform active:scale-95">
+               <button onClick={() => {
+                 sessionStorage.setItem("bhaiya_role", "seller");
+                 setShowOnboarding(true);
+               }} className="px-16 py-5 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-[0.3em] hover:bg-black shadow-2xl transition-all transform active:scale-95">
                  Initialize My Account
                </button>
             </div>

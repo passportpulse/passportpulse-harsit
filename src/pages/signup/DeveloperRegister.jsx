@@ -26,11 +26,13 @@ import {
   X as CloseIcon,
   X
 } from "lucide-react";
+import OnboardingModal from "../../components/modals/OnboardingModal";
 
 export default function DeveloperRegister() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [showPlans, setShowPlans] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("City Giant");
   const [uploadFiles, setUploadFiles] = useState({ rera: null, trackRecord: null, sanctionedPlans: null });
 
@@ -39,14 +41,16 @@ export default function DeveloperRegister() {
   };
 
   const handleNext = (e) => {
-    e.preventDefault();
-    setStep(2);
+    if (e) e.preventDefault();
+    sessionStorage.setItem("bhaiya_role", "developer");
+    setShowOnboarding(true);
   };
 
   const cities = ["Delhi NCR", "Mumbai", "Bangalore", "Pune", "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Durgapur"];
 
   return (
     <div className="min-h-screen bg-slate-50 font-poppins py-10 antialiased selection:bg-orange-200">
+      <OnboardingModal isOpen={showOnboarding} onClose={() => navigate("/dashboard")} role="developer" />
       <div className="max-w-6xl mx-auto px-6">
         {/* Top Navigation */}
         <div className="flex justify-between items-center mb-8">
@@ -56,15 +60,9 @@ export default function DeveloperRegister() {
           >
             <ArrowLeft size={18} />
           </button>
-
-          {/* <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 shadow-sm rounded-full text-xs font-bold text-slate-700 hover:border-dark-orange hover:text-dark-orange transition-all">
-            <Headset size={16} />
-            Request Demo
-          </button> */}
         </div>
 
-        {step === 1 ? (
-          <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
             {/* Header Section */}
             <div className="text-center max-w-3xl mx-auto mb-10">
               <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-[1.5rem] bg-orange-50 border border-orange-100 mb-6 shadow-md hover:shadow-orange-200/50 transform hover:-translate-y-0.5 transition-all cursor-default">
@@ -306,88 +304,6 @@ export default function DeveloperRegister() {
               </div>
             </div>
           </div>
-        ) : (
-          /* STEP 2: Tiered Subscriptions */
-          <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 mb-4 shadow-sm">
-                <ShieldCheck size={14} className="text-green-600" />
-                <span className="text-[11px] font-black uppercase tracking-[0.1em] text-slate-600">
-                  Step 2 of 2
-                </span>
-              </div>
-              <h2 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">Choose Your Enterprise Plan</h2>
-              <p className="text-slate-500 mt-4 font-medium">Developers don't want "One-size-fits-all." Select the tier that matches your scale.</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <TierCard
-                name="Emerging Builder"
-                desc="For growing developers"
-                price="Standard"
-                projects="Up to 2"
-                leadQuality="Standard"
-                microsites="❌"
-                video="❌"
-                manager="❌"
-                selected={selectedPlan === "Emerging Builder"}
-                onClick={() => setSelectedPlan("Emerging Builder")}
-              />
-              <TierCard
-                name="City Giant"
-                desc="For established builders"
-                price="Premium"
-                projects="Up to 10"
-                leadQuality="Verified"
-                microsites="✅"
-                video="✅"
-                manager="❌"
-                selected={selectedPlan === "City Giant"}
-                onClick={() => setSelectedPlan("City Giant")}
-                popular
-              />
-              <TierCard
-                name="National Leader"
-                desc="For limitless scale"
-                price="Enterprise"
-                projects="Unlimited"
-                leadQuality="Priority Verified"
-                microsites="✅"
-                video="✅"
-                manager="✅"
-                selected={selectedPlan === "National Leader"}
-                onClick={() => setSelectedPlan("National Leader")}
-              />
-            </div>
-
-            {/* Payment Section */}
-            <div className="max-w-md mx-auto bg-white p-8 rounded-[2rem] border border-orange-100 shadow-2xl flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-orange-50 flex items-center justify-center mb-4">
-                <CreditCard size={28} className="text-dark-orange" />
-              </div>
-              <h3 className="text-xl font-black text-slate-800 mb-1">Finalize Onboarding</h3>
-              <p className="text-xs text-slate-500 text-center mb-6 font-medium">Your selected plan: <span className="font-bold text-dark-orange uppercase">{selectedPlan}</span></p>
-
-              <button
-                className="w-full py-4 rounded-xl bg-dark-orange text-white text-xs font-black uppercase tracking-[0.15em] shadow-xl hover:bg-black transition-all transform active:scale-95"
-              >
-                Proceed to Checkout
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Request Demo Section */}
-        <div className="mt-24 pt-12 border-t border-slate-200">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-black text-slate-800 mb-2 tracking-tight uppercase px-4">Request a Demo</h2>
-            <p className="text-[13px] text-slate-500 font-medium mb-8">Ready to see the full potential? Get a personalized walkthrough of the Bhaiya Developer Suite.</p>
-            <button className="px-10 py-4 bg-slate-900 text-dark-orange text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-black transition-all shadow-2xl shadow-slate-300 active:scale-95 flex items-center justify-center gap-3 mx-auto">
-              <Headset size={20} />
-              Schedule My Demo Now
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Tiered Plans Comparison Modal */}
@@ -568,10 +484,6 @@ function Indicator({ val, center }) {
       </div>
    );
 }
-
-const Info = ({ ...props }) => <Building {...props} />; // Custom label for Advisory
-
-{/* Micro Components */ }
 
 function InputField({ label, icon, ...props }) {
   return (
