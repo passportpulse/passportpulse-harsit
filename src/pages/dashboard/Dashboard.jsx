@@ -135,8 +135,8 @@ export default function Dashboard() {
                <div
                  key={index}
                  onClick={() => {
-                    sessionStorage.setItem("bhaiya_role", selectedRole);
-                    setRole(selectedRole);
+                    // Navigate to the Login page first, as per the original flow
+                    navigate(`/login?role=${encodeURIComponent(service.loginText)}`);
                  }}
                  className="group relative p-6 md:p-8 rounded-4xl bg-white border border-slate-200 hover:border-dark-orange hover:shadow-2xl hover:shadow-orange-100/50 transition-all duration-300 flex flex-col justify-between cursor-pointer"
                >

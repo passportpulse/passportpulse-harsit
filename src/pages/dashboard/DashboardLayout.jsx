@@ -95,7 +95,16 @@ export default function DashboardLayout({ children, role = "buyer", userName = "
         </nav>
 
         <div className="p-4 border-t border-slate-100">
-          <button className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all">
+          <button 
+            onClick={() => {
+              sessionStorage.removeItem("bhaiya_role");
+              // Also clear any other portal-specific flags
+              sessionStorage.clear();
+              // Redirect to home page
+              window.location.href = "/";
+            }}
+            className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all transition-transform active:scale-95"
+          >
             <LogOut size={20} />
             Logout
           </button>
@@ -116,16 +125,27 @@ export default function DashboardLayout({ children, role = "buyer", userName = "
              </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 sm:gap-6">
              {/* Notification */}
              <button className="relative w-10 h-10 flex items-center justify-center text-slate-400 hover:text-dark-orange transition-all">
                 <Bell size={22} />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-dark-orange rounded-full border-2 border-white"></span>
              </button>
 
+             {/* Quick Logout for Mobile */}
+             <button 
+               onClick={() => {
+                 sessionStorage.clear();
+                 window.location.href = "/";
+               }}
+               className="lg:hidden w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all border border-slate-100 rounded-xl"
+             >
+                <LogOut size={20} />
+             </button>
+
              {/* Profile */}
-             <div className="flex items-center gap-3 pl-6 border-l border-slate-200">
-                <div className="text-right">
+             <div className="flex items-center gap-3 pl-3 sm:pl-6 border-l border-slate-200">
+                <div className="hidden sm:block text-right">
                    <p className="text-xs font-black text-slate-900 leading-none">{userName}</p>
                    <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">{role} Premium</p>
                 </div>

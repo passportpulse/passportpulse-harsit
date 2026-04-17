@@ -20,8 +20,23 @@ export default function VerifyOtp() {
   const handleVerify = (e) => {
     e.preventDefault();
     if (otp.length !== 4) return;
-    // Your verification logic here
-    navigate("/partner-application-form");
+    
+    // Extract role from URL
+    const roleQuery = searchParams.get("role") || "Buyer Login";
+    const roleMap = {
+      "Buyer Login": "buyer",
+      "Seller Login": "seller",
+      "Partner Login": "buyer",
+      "Developer Login": "developer",
+      "Expert Login": "expert"
+    };
+    const selectedRole = roleMap[roleQuery] || "buyer";
+
+    // Standard Login Logic
+    sessionStorage.setItem("bhaiya_role", selectedRole);
+    
+    // Redirect to the dashboard
+    navigate("/dashboard");
   };
 
   return (
