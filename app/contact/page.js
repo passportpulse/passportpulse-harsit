@@ -256,7 +256,7 @@ export default function ContactUs() {
                 <i className="fas fa-map-marker-alt text-2xl text-[var(--neon-cyan)] mt-1 transition-transform duration-300 group-hover:scale-110"></i>
                 <div>
                   <h4 className="font-bold text-white text-lg">Our Location</h4>
-                  <p className="text-gray-400">Kolkata, West Bengal, India</p>
+                  <p className="text-gray-400">1 Khudiram Bose Sarani(Mall Road), Nagerbazar, Kolkata 700-080</p>
                   <p className="text-gray-500 text-sm">(Serving Clients Worldwide)</p>
                 </div>
               </div>
