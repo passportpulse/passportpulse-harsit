@@ -112,9 +112,9 @@ const Footer = () => {
             <h4 className="font-bold text-white mb-4 text-lg">Our Office</h4>
 
             <p className="text-gray-400 leading-relaxed mb-4">
-              Space Nex, 1st Floor, Door No. 104<br />
-              361, Purbachal, Kalitala Road<br />
-              Kolkata - 700078<br />
+              1 Khudiram Bose Sarani(Mall Road)<br />
+              Nagerbazar <br />
+              Kolkata 700-080<br />
               Opposite GST Bhawan
             </p>
 
