@@ -75,7 +75,7 @@ const WhyChooseUs = () => {
                             alt="Passport Pulse Logo" 
                             width={100} 
                             height={100} 
-                            className="mx-auto invert brightness-0 w-24 h-24"
+                            className="mx-auto w-24 h-24"
                         />
                         <h3 className="text-3xl font-bold text-white text-center mt-4">Passport Pulse</h3>
                         <p className="text-center text-gray-400 mb-6">A WEB DEV / MARKETING COMPANY</p>

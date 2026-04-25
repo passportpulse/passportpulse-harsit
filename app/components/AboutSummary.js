@@ -68,15 +68,62 @@ const AboutSummary = () => {
                     ))}
                 </div>
 
-                 {/* --- Affiliations Title --- */}
-                 <div className="text-center max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-bold text-white mt-4 text-balance">
-                        Our Affiliations
-                    </h2>
-                    <div className="mt-4 w-20 h-1.5 bg-[var(--neon-cyan)] mx-auto rounded-full"></div>
+                 {/* --- Affiliations --- */}
+                 <div className="mt-16">
+                    <div className="text-center max-w-3xl mx-auto mb-12">
+                        <h2 className="text-3xl font-bold text-white mt-4 text-balance">
+                            Our Affiliations & Partners
+                        </h2>
+                        <div className="mt-4 w-20 h-1.5 bg-[var(--neon-cyan)] mx-auto rounded-full"></div>
+                    </div>
+
+                    <div className="relative overflow-hidden py-8 border-y border-white/5 bg-white/5 backdrop-blur-sm rounded-3xl">
+                         {/* Gradient Fades */}
+                        <div className="absolute inset-y-0 left-0 w-20 z-10 bg-gradient-to-r from-[#0A0F1A] to-transparent pointer-events-none"></div>
+                        <div className="absolute inset-y-0 right-0 w-20 z-10 bg-gradient-to-l from-[#0A0F1A] to-transparent pointer-events-none"></div>
+
+                        <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
+                            {[1, 2, 3].map((set) => (
+                                <div key={set} className="flex items-center gap-12 min-w-full justify-around">
+                                    <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                                        <i className="fab fa-google text-2xl text-white"></i>
+                                        <span className="font-bold text-xl tracking-tight">Google Cloud</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                                        <i className="fab fa-aws text-2xl text-white"></i>
+                                        <span className="font-bold text-xl tracking-tight">AWS</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                                        <i className="fab fa-digital-ocean text-2xl text-white"></i>
+                                        <span className="font-bold text-xl tracking-tight">DigitalOcean</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                                        <i className="fas fa-leaf text-2xl text-white"></i>
+                                        <span className="font-bold text-xl tracking-tight">MongoDB</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                                        <i className="fab fa-stripe text-2xl text-white"></i>
+                                        <span className="font-bold text-xl tracking-tight">Stripe</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
             </div>
+            <style jsx>{`
+                @keyframes marquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-100%); }
+                }
+                .animate-marquee {
+                    animation: marquee 40s linear infinite;
+                }
+                .animate-marquee:hover {
+                    animation-play-state: paused;
+                }
+            `}</style>
         </section>
     );
 };

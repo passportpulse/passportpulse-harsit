@@ -41,7 +41,7 @@ const Footer = () => {
                   alt="Company Logo"
                   width={200}
                   height={200}
-                  className="invert brightness-0"
+                  className=""
                 />
               </div>
             </Link>

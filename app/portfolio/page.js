@@ -57,14 +57,14 @@ const PortfolioPage = () => {
 
     return (
         <main ref={containerRef} className="bg-transparent text-white">
-            <section className="relative pt-40 pb-20 text-center border-b border-blue-500/20">
-                <div className="absolute inset-0 z-0 opacity-10 bg-[linear-gradient(to_right,#007BFF1A_1px,transparent_1px),linear-gradient(to_bottom,#007BFF1A_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+            <section className="relative pt-40 pb-20 text-center border-b border-[var(--neon-cyan)]/20">
+                <div className="absolute inset-0 z-0 opacity-10 bg-[linear-gradient(to_right,var(--neon-cyan)_1px,transparent_1px),linear-gradient(to_bottom,var(--neon-cyan)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
                 <div className="relative z-10 p-6 container mx-auto">
-                    <p className="text-sm uppercase font-bold text-[#007BFF] tracking-[0.2em] font-sora">Our Work</p>
-                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-rajdhani font-bold text-white mt-4 text-balance" style={{ textShadow: '0 0 20px rgba(0, 123, 255, 0.5)' }}>
+                    <p className="text-sm uppercase font-bold text-[var(--neon-cyan)] tracking-[0.2em]">Our Work</p>
+                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white mt-4 text-balance" style={{ textShadow: '0 0 20px rgba(0, 191, 165, 0.5)' }}>
                         Our Portfolio
                     </h1>
-                    <p className="text-lg md:text-xl text-gray-300 mt-6 max-w-3xl mx-auto text-balance font-sora">
+                    <p className="text-lg md:text-xl text-gray-300 mt-6 max-w-3xl mx-auto text-balance">
                         We take pride in our work. Explore a selection of our projects that showcase our commitment to quality, innovation, and digital excellence.
                     </p>
                 </div>
@@ -76,27 +76,27 @@ const PortfolioPage = () => {
                         {portfolioData.map((project, index) => (
                             <div
                                 key={index}
-                                className="portfolio-card bg-slate-900/50 border border-blue-500/20 rounded-2xl flex flex-col h-full overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-2 opacity-0 transform translate-y-12"
+                                className="portfolio-card glass-card flex flex-col h-full overflow-hidden transition-all duration-300 hover:border-[var(--neon-cyan)]/40 hover:shadow-lg hover:shadow-[var(--primary-glow)] hover:-translate-y-2 opacity-0 transform translate-y-12"
                             >
                                 <div className="relative w-full h-56">
                                     <Image
                                         src={project.image}
                                         alt={project.title}
-                                        layout="fill"
-                                        objectFit="cover"
+                                        fill
+                                        className="object-cover"
                                     />
                                 </div>
                                 <div className="p-6 flex flex-col flex-grow">
-                                    <h3 className="text-2xl font-bold text-white mb-2 font-rajdhani">{project.title}</h3>
-                                    <p className="text-gray-400 text-balance flex-grow mb-6 font-sora text-sm">{project.description}</p>
+                                    <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
+                                    <p className="text-gray-400 text-balance flex-grow mb-6 text-sm">{project.description}</p>
 
                                     <div className="flex flex-wrap gap-2 mb-6">
                                         {project.technologies.map((tech, i) => (
-                                            <span key={i} className="bg-blue-500/10 text-blue-300 text-xs px-3 py-1 rounded-full">{tech}</span>
+                                            <span key={i} className="bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] text-xs px-3 py-1 rounded-full border border-[var(--neon-cyan)]/20">{tech}</span>
                                         ))}
                                     </div>
 
-                                    <div className="mt-auto pt-4 border-t border-blue-500/10 flex justify-between items-center w-full">
+                                    <div className="mt-auto pt-4 border-t border-white/10 flex justify-between items-center w-full">
                                         <div>
                                             <p className="text-xs text-gray-500">CLIENT</p>
                                             <p className="text-sm font-semibold text-gray-300">{project.client}</p>
@@ -105,7 +105,7 @@ const PortfolioPage = () => {
                                             href={project.liveUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-block px-6 py-2 font-semibold text-white bg-[#007BFF] rounded-lg transition-all duration-300 ease-in-out hover:bg-blue-400"
+                                            className="inline-block px-6 py-2 font-semibold text-black bg-[var(--neon-cyan)] rounded-lg transition-all duration-300 ease-in-out hover:bg-white"
                                         >
                                             Live Preview
                                         </Link>
