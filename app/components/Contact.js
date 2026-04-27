@@ -32,12 +32,35 @@ const Contact = () => {
     };
   }, []);
 
+  const [captcha, setCaptcha] = useState("");
+  const [captchaInput, setCaptchaInput] = useState("");
+
+  const generateCaptcha = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // No 0, O, I, 1 for clarity
+    let result = "";
+    for (let i = 0; i < 6; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setCaptcha(result);
+    setCaptchaInput("");
+  };
+
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (captchaInput.toUpperCase() !== captcha) {
+      setFormStatus("Invalid CAPTCHA! Please try again.");
+      generateCaptcha();
+      return;
+    }
     setFormStatus("Sending...");
     // Mock API call
     setTimeout(() => {
       setFormStatus("Message sent successfully!");
+      generateCaptcha();
       setTimeout(() => setFormStatus(""), 5000); // 5 sec por message chole jabe
     }, 1500);
   };
@@ -112,20 +135,52 @@ const Contact = () => {
               </div>
               <div style={animateStyle(4)}>
                 <label
-                  htmlFor="message"
+                  htmlFor="mobile"
                   className="text-sm font-semibold text-gray-400"
                 >
-                  Your Message
+                  Mobile Number
                 </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="5"
+                <input
+                  type="tel"
+                  id="mobile"
+                  name="mobile"
                   required
-                  className="mt-2 w-full p-3 rounded-lg bg-black/30 border border-white/10 resize-none focus:border-[var(--neon-cyan)] focus:ring-2 focus:ring-[var(--primary-glow)] focus:outline-none transition-all duration-300"
-                ></textarea>
+                  placeholder="e.g. +91 98765 43210"
+                  className="mt-2 w-full p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-2 focus:ring-[var(--primary-glow)] focus:outline-none transition-all duration-300"
+                />
               </div>
-              <div style={animateStyle(5)}>
+
+              {/* CAPTCHA SECTION */}
+              <div style={animateStyle(5)} className="space-y-2">
+                <label className="text-sm font-semibold text-gray-400">
+                  Security Code:
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="bg-slate-800 px-4 py-2 rounded border border-white/20 select-none pointer-events-none">
+                    <span className="text-[var(--neon-cyan)] font-bold italic tracking-widest text-xl line-through decoration-white/20">
+                      {captcha}
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={captchaInput}
+                    onChange={(e) => setCaptchaInput(e.target.value)}
+                    placeholder="Type code here"
+                    required
+                    className="flex-1 p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:outline-none transition-all duration-300 uppercase"
+                  />
+                  <button
+                    type="button"
+                    onClick={generateCaptcha}
+                    className="p-3 rounded-lg bg-slate-800 text-[var(--neon-cyan)] hover:bg-slate-700 transition-colors"
+                    title="Refresh Code"
+                  >
+                    <i className="fas fa-sync-alt"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div style={animateStyle(6)}>
                 <button
                   type="submit"
                   className="w-full inline-block px-10 py-4 text-lg font-semibold text-black bg-[var(--neon-cyan)] rounded-lg transition-all duration-300 ease-in-out hover:bg-white hover:shadow-2xl hover:shadow-[var(--primary-glow)]"
@@ -133,7 +188,7 @@ const Contact = () => {
                   Send Message
                 </button>
                 {formStatus && (
-                  <p className="text-center mt-4 text-[var(--neon-cyan)]">
+                  <p className={`text-center mt-4 ${formStatus.includes('Invalid') ? 'text-red-400' : 'text-[var(--neon-cyan)]'}`}>
                     {formStatus}
                   </p>
                 )}

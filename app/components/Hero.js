@@ -11,18 +11,33 @@ gsap.registerPlugin(TextPlugin);
 
 const HeroForm = () => {
     const [formStatus, setFormStatus] = useState("");
+    const [captcha, setCaptcha] = useState("");
+    const [captchaInput, setCaptchaInput] = useState("");
+
+    const generateCaptcha = React.useCallback(() => {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        let result = "";
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        setCaptcha(result);
+        setCaptchaInput("");
+    }, []);
+
+    React.useEffect(() => {
+        generateCaptcha();
+    }, [generateCaptcha]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setFormStatus("Sending...");
 
-        // Validate security answer
-        const securityAnswer = e.target.security_answer.value.trim();
-        if (securityAnswer !== "5") {
-            setFormStatus("Incorrect security answer. Please try again.");
-            setTimeout(() => setFormStatus(""), 3000);
+        if (captchaInput.toUpperCase() !== captcha) {
+            setFormStatus("Invalid CAPTCHA! Please try again.");
+            generateCaptcha();
             return;
         }
+
+        setFormStatus("Sending...");
 
         const formData = {
             name: e.target.name.value,
@@ -42,11 +57,14 @@ const HeroForm = () => {
                 setFormStatus("Message sent successfully!");
                 setTimeout(() => setFormStatus(""), 5000);
                 e.target.reset();
+                generateCaptcha();
             } else {
                 setFormStatus("Failed to send message. Please try again.");
+                generateCaptcha();
             }
         } catch (error) {
             setFormStatus(error.response?.data?.message || "An error occurred.");
+            generateCaptcha();
         }
     };
 
@@ -119,14 +137,30 @@ const HeroForm = () => {
                     </select>
                 </div>
                 <div>
-                    <label className="text-white text-sm mb-1 block">Security Question: What is 2 + 3?</label>
-                    <input
-                        type="text"
-                        name="security_answer"
-                        required
-                        placeholder="Enter answer"
-                        className="w-full p-2.5 text-sm rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white"
-                    />
+                    <label className="text-white text-sm mb-1 block">Security Code:</label>
+                    <div className="flex items-center gap-3">
+                        <div className="bg-slate-800 px-3 py-2 rounded border border-white/20 select-none pointer-events-none">
+                            <span className="text-[var(--neon-cyan)] font-bold italic tracking-widest text-lg line-through decoration-white/20">
+                                {captcha}
+                            </span>
+                        </div>
+                        <input
+                            type="text"
+                            value={captchaInput}
+                            onChange={(e) => setCaptchaInput(e.target.value)}
+                            required
+                            placeholder="Type code"
+                            className="flex-1 p-2.5 text-sm rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white uppercase"
+                        />
+                        <button
+                            type="button"
+                            onClick={generateCaptcha}
+                            className="p-2.5 rounded-lg bg-slate-800 text-[var(--neon-cyan)] hover:bg-slate-700 transition-colors"
+                            title="Refresh Code"
+                        >
+                            <i className="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
                 </div>
                 <button
                     type="submit"

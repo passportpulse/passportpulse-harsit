@@ -36,22 +36,24 @@ const FaqItem = ({ question, answer }) => {
 export default function ContactUs() {
     const [formStatus, setFormStatus] = useState("");
     const [formStartTime, setFormStartTime] = useState(null);
-    const [mathCaptcha, setMathCaptcha] = useState({ num1: 0, num2: 0, userAnswer: '' });
+    const [captcha, setCaptcha] = useState("");
+    const [captchaInput, setCaptchaInput] = useState("");
     const router = useRouter();
+
+    const generateCaptcha = () => {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        let result = "";
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        setCaptcha(result);
+        setCaptchaInput("");
+    };
 
     useEffect(() => {
         setFormStartTime(Date.now());
-        // Generate random math CAPTCHA
-        const num1 = Math.floor(Math.random() * 10) + 1;
-        const num2 = Math.floor(Math.random() * 10) + 1;
-        setMathCaptcha({ num1, num2, userAnswer: '' });
+        generateCaptcha();
     }, []);
-
-    const regenerateCaptcha = () => {
-        const num1 = Math.floor(Math.random() * 10) + 1;
-        const num2 = Math.floor(Math.random() * 10) + 1;
-        setMathCaptcha({ ...mathCaptcha, num1, num2, userAnswer: '' });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -70,12 +72,10 @@ export default function ContactUs() {
             return;
         }
 
-        // Check math CAPTCHA
-        const correctAnswer = mathCaptcha.num1 + mathCaptcha.num2;
-        const userAnswer = parseInt(e.target.captcha_answer?.value);
-        if (!userAnswer || userAnswer !== correctAnswer) {
-            setFormStatus("Incorrect answer. Please try again.");
-            regenerateCaptcha();
+        // Check Text CAPTCHA
+        if (captchaInput.toUpperCase() !== captcha) {
+            setFormStatus("Incorrect code. Please try again.");
+            generateCaptcha();
             return;
         }
 
@@ -84,8 +84,8 @@ export default function ContactUs() {
         const formData = {
           name: e.target.name.value,
           email: e.target.email.value,
+          mobile: e.target.mobile.value,
           interested_in: e.target.interested_in.value,
-          message: e.target.message.value,
           formTime: timeSpent,
           timestamp: new Date().toISOString()
         };
@@ -99,12 +99,15 @@ export default function ContactUs() {
                 setFormStatus("Message sent successfully!");
                 setTimeout(() => setFormStatus(""), 5000);
                 e.target.reset();
+                generateCaptcha();
                 setFormStartTime(Date.now()); // Reset timer for next submission
             } else {
                  setFormStatus("Failed to send message. Please try again.");
+                 generateCaptcha();
             }
         } catch (error) {
             setFormStatus(error.response?.data?.message || "An error occurred.");
+            generateCaptcha();
         }
     };
 
@@ -174,8 +177,8 @@ export default function ContactUs() {
                 </select>
               </div>
               <div>
-                <label htmlFor="message" className="text-sm font-semibold text-gray-400">Your Message</label>
-                <textarea id="message" name="message" rows="5" required className="mt-2 w-full p-3 rounded-lg bg-black/30 border border-white/10 resize-none focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white"></textarea>
+                <label htmlFor="mobile" className="text-sm font-semibold text-gray-400">Your Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" required placeholder="e.g. +91 98765 43210" className="mt-2 w-full p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white" />
               </div>
               {/* Honeypot field - hidden from humans but visible to bots */}
               <div className="hidden" aria-hidden="true">
@@ -189,27 +192,32 @@ export default function ContactUs() {
                   className="mt-2 w-full p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white" 
                 />
               </div>
-              {/* Math CAPTCHA */}
+              {/* Text CAPTCHA */}
               <div>
-                <label htmlFor="captcha_answer" className="text-sm font-semibold text-gray-400">
-                  Security Question: What is {mathCaptcha.num1} + {mathCaptcha.num2}?
+                <label className="text-sm font-semibold text-gray-400">
+                  Security Code:
                 </label>
-                <div className="flex gap-2 mt-2">
+                <div className="flex gap-4 mt-2">
+                  <div className="bg-slate-800 px-4 py-2 rounded border border-white/20 select-none pointer-events-none">
+                    <span className="text-[var(--neon-cyan)] font-bold italic tracking-widest text-xl line-through decoration-white/20">
+                      {captcha}
+                    </span>
+                  </div>
                   <input 
-                    type="number" 
-                    id="captcha_answer" 
-                    name="captcha_answer" 
+                    type="text" 
+                    value={captchaInput}
+                    onChange={(e) => setCaptchaInput(e.target.value)}
                     required
-                    placeholder="Answer"
-                    className="flex-1 p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white"
+                    placeholder="Type code"
+                    className="flex-1 p-3 rounded-lg bg-black/30 border border-white/10 focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--primary-glow)] focus:outline-none transition-colors text-white uppercase"
                   />
                   <button 
                     type="button" 
-                    onClick={regenerateCaptcha}
-                    className="px-4 py-3 text-sm font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors"
-                    title="Get new question"
+                    onClick={generateCaptcha}
+                    className="p-3 rounded-lg bg-slate-800 text-[var(--neon-cyan)] hover:bg-slate-700 transition-colors"
+                    title="Refresh Code"
                   >
-                    🔄
+                    <i className="fas fa-sync-alt"></i>
                   </button>
                 </div>
               </div>

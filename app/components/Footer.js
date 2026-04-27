@@ -21,27 +21,31 @@ const Footer = () => {
           <div className="text-center md:text-left">
             <Link
               href="/"
-              className="items-center gap-3 mb-4 flex flex-col justify-start"
+              className="flex flex-col items-center md:items-start mb-6"
             >
-              <div>
+              <div className="mb-0 overflow-hidden">
                 <Image
                   src="/logo-new.png"
                   alt="Passport Pulse Logo"
-                  width={200}
-                  height={200}
+                  width={240}
+                  height={80}
+                  className="object-contain"
+                  priority
                 />
-                <h1 className="font-semibold text-xl mt-3 text-white">
-                  Our Sister Concern
-                </h1>
               </div>
-
-              <div>
+              
+              <div className="flex flex-col items-center md:items-start -mt-4 w-full">
+                <div className="py-2 w-[240px] flex justify-center md:justify-start">
+                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-500 opacity-80">
+                    Our Sister Concern
+                  </span>
+                </div>
                 <Image
                   src="/logos-c.png"
                   alt="Company Logo"
-                  width={200}
-                  height={200}
-                  className=""
+                  width={240}
+                  height={80}
+                  className="object-contain -mt-2"
                 />
               </div>
             </Link>
