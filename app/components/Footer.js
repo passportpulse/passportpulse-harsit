@@ -21,9 +21,9 @@ const Footer = () => {
           <div className="text-center md:text-left">
             <Link
               href="/"
-              className="flex flex-col items-center md:items-start mb-6"
+              className="flex flex-col items-center md:items-start mb-6 gap-0"
             >
-              <div className="mb-0 overflow-hidden">
+              <div className="p-0 m-0 leading-[0]">
                 <Image
                   src="/logo-new.png"
                   alt="Passport Pulse Logo"
@@ -34,9 +34,9 @@ const Footer = () => {
                 />
               </div>
               
-              <div className="flex flex-col items-center md:items-start -mt-4 w-full">
-                <div className="py-2 w-[240px] flex justify-center md:justify-start">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-500 opacity-80">
+              <div className="relative flex flex-col items-center md:items-start -mt-5 w-full p-0 m-0 leading-[0]">
+                <div className="absolute -top-1 left-0 w-[240px] flex justify-center md:justify-start pointer-events-none">
+                  <span className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-500 opacity-60">
                     Our Sister Concern
                   </span>
                 </div>
@@ -45,7 +45,7 @@ const Footer = () => {
                   alt="Company Logo"
                   width={240}
                   height={80}
-                  className="object-contain -mt-2"
+                  className="object-contain -mt-1"
                 />
               </div>
             </Link>
