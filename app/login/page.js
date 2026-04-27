@@ -54,9 +54,9 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-deep-space text-white flex items-center justify-center p-4">
-      <div className="glass-card w-full max-w-sm p-8 rounded-lg text-center">
-        <Image width="200" height="200" src="/logo-new.png" alt="Passport Pulse Logo" className=" w-60 mb-6 mx-auto"/>
-        <p className="text-gray-400 mb-6">
+      <div className="glass-card w-full max-w-sm pt-4 pb-8 px-8 rounded-lg text-center">
+        <Image width="200" height="200" src="/logo-new.png" alt="Passport Pulse Logo" className=" w-56 mb-0 mx-auto"/>
+        <p className="text-gray-400 mt-0 mb-2 leading-tight">
           Welcome back! Please log in to your account.
         </p>
 
