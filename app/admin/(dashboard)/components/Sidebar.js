@@ -24,9 +24,9 @@ const Sidebar = () => {
 
       return (
             <aside className="fixed top-0 left-0 w-64 h-full bg-white border-r border-gray-200 hidden md:flex flex-col">
-                  <div className="p-6 text-center border-b border-gray-200">
+                  <div className="p-1 text-center border-b border-gray-200">
                         <Link href="/admin">
-                            <Image src="/logo-new.png" alt="Passport Pulse Logo" width={100} height={60} className="w-20 h-20 mx-auto" />
+                            <Image src="/logo-new.png" alt="Passport Pulse Logo" width={300} height={100} className="w-full max-w-[230px] h-auto mx-auto" />
                         </Link>
                   </div>
                   <nav className="flex-1 p-4 space-y-6">

@@ -61,9 +61,9 @@ const Header = () => {
     <>
       <header className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${isScrolled ? "bg-slate-900/80 backdrop-blur-md border-b border-b-cyan-400/10 border-[var(--neon-cyan)]/20" : "bg-transparent border-b border-transparent"} ${pathname === "/login" && "hidden"}`}>
         <nav className="container mx-auto px-4 lg:px-6 transition-all duration-300 py-0">
-          <div className="flex items-center justify-between h-14 lg:h-16">
+          <div className="flex items-center justify-between h-16 lg:h-20">
             <Link href="/" title="Go to Passport Pulse Homepage" className="flex items-center py-0">
-              <Image src="/logo-new.png" alt="Passport Pulse Logo" width={220} height={80} className="w-44 lg:w-56 h-auto block" />
+              <Image src="/logo-new.png" alt="Passport Pulse Logo" width={280} height={100} className="w-52 lg:w-64 h-auto block" />
             </Link>
 
             <div className="hidden lg:flex items-center space-x-8">
