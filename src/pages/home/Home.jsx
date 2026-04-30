@@ -15,14 +15,19 @@ import VerifiedSection from "./sections/verifiedProperties";
 import FreshArrivals from "./sections/FreshArrivals";
 import CategoryComparison from "./sections/CategoryComparison";
 import GoToAuctionCTA from "./sections/GoToAuctionCTA";
+import BhaiyaSelection from "./sections/BhaiyaSelection";
+import PriceHeatMap from "./sections/PriceHeatMap";
+import VIPSection from "./sections/VIPSection";
 
 export default function Home() {
   return (
     <>
       <HomeHero />
+      <BhaiyaSelection />
       <CategoryComparison/>
       <FeaturedProperties />
       <BestBuy />
+      <PriceHeatMap />
       <HotDeals />
       <UrgentExitSection />
       <VerifiedSection/>
@@ -32,6 +37,7 @@ export default function Home() {
       <SellYourProperty />
       <Trust />
       <Testimonials />
+      <VIPSection />
       <JoinUs />
       <ContactCTA />
       <ScheduleVisitCta />

@@ -14,9 +14,11 @@ import Register from "../pages/signup/Register";
 import ScrollToTop from "../components/ScrollToTop"; 
 import ScheduleVisit from "../pages/schedule-visit/ScheduleVisit";
 import VerifyOtp from "../pages/login/VerifyOtp";
-import PartnerApplicationForm from "../pages/partner-application-form/PartnerApplicationForm";
-import ExpertAdvice from "../pages/expert-advice/ExpertAdvice";
-import AuctionTab from "../pages/auction-tab/AuctionTab";
+import AddPropertyForm from "../pages/sell/AddPropertyForm";
+import BhaiyaTools from "../pages/dashboard/BhaiyaTools";
+import AgentSignUp from "../pages/joinus/AgentSignUp";
+import VIPSuite from "../pages/founder/VIPSuite";
+import RedFlagsGuide from "../pages/resources/RedFlagsGuide";
 
 
 export const router = createBrowserRouter([
@@ -44,7 +46,11 @@ export const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "/expert-advice", element: <ExpertAdvice /> },
       { path: "/auction", element: <AuctionTab /> },
-      { path: "/add-property", element: <Sell /> },
+      { path: "/add-property", element: <AddPropertyForm /> },
+      { path: "/dashboard/tools", element: <BhaiyaTools /> },
+      { path: "/agent-signup", element: <AgentSignUp /> },
+      { path: "/vip-suite", element: <VIPSuite /> },
+      { path: "/red-flags-guide", element: <RedFlagsGuide /> },
     ],
   },
 ]);

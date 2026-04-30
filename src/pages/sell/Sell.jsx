@@ -2,6 +2,8 @@ import SellForm from "./sections/SellForm";
 import SellFaq from "./sections/SellFaq";
 import SellHowItWorks from "./sections/SellHowItWorks";
 import SellResults from "./sections/SellResults";
+import SellingPower from "./sections/SellingPower";
+import SellerWelcomeGuide from "./sections/SellerWelcomeGuide";
 import { placesInWB } from "../../data/locations";
 import { useState } from "react";
 import Section from "../../components/layout/Section";
@@ -59,6 +61,8 @@ export default function Sell() {
               onSubmit={() => setShowResults(true)}
             />
             
+            <SellingPower />
+            <SellerWelcomeGuide />
             <SellHowItWorks/>
             <SellFaq/>
           </>

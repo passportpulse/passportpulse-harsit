@@ -31,6 +31,7 @@ import {
   AlertCircle,
   Plus
 } from "lucide-react";
+import NotificationSettings from "./NotificationSettings";
 
 export default function BuyerDashboard({ subPath }) {
   if (subPath === "watchlist") return <WatchlistSubPage />;
@@ -75,6 +76,28 @@ export default function BuyerDashboard({ subPath }) {
          <MetricBox label="Site Visits" value="02" icon={<MapPin size={20} />} />
          <MetricBox label="Pending Docs" value="01" icon={<FileText size={20} />} />
          <MetricBox label="Bhaiya Coins" value="850" icon={<Zap size={20} />} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+         <div className="lg:col-span-8">
+            <NotificationSettings />
+         </div>
+         <div className="lg:col-span-4 space-y-8">
+            <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden h-full flex flex-col justify-between">
+               <div className="absolute top-0 right-0 w-64 h-64 bg-dark-orange/20 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+               <div>
+                  <h3 className="text-lg font-black uppercase tracking-widest text-orange-400 mb-8">Bhaiya Tips</h3>
+                  <div className="space-y-6">
+                     <p className="text-sm font-medium text-slate-400 leading-relaxed">Properties in <b>New Town</b> are selling 25% faster this week. Book your site visit early!</p>
+                     <div className="h-px bg-white/10"></div>
+                     <p className="text-sm font-medium text-slate-400 leading-relaxed">Your <b>Tier 1 Profile</b> gives you priority access to pre-launch pricing.</p>
+               </div>
+               </div>
+               <button className="w-full py-5 flex items-center justify-center gap-3 rounded-2xl bg-white text-slate-900 text-[11px] font-black uppercase tracking-widest mt-12 hover:scale-105 transition-all active:scale-95 shadow-2xl">
+                  Talk to Expert <ArrowRight size={18} />
+               </button>
+            </div>
+         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

@@ -25,14 +25,20 @@ import {
   Calendar,
   User,
   Phone,
-  Mail
+  Mail,
+  Award
 } from "lucide-react";
+import StarSellerSection from "./StarSellerSection";
+import VerificationChecklist from "./VerificationChecklist";
+import AdminIntegrityHub from "./AdminIntegrityHub";
 
 export default function SellerDashboard({ subPath }) {
   if (subPath === "listings") return <ListingsPage />;
   if (subPath === "leads") return <LeadsPage />;
   if (subPath === "boosts") return <BoostsPage />;
   if (subPath === "docs") return <DocumentsPage />;
+  if (subPath === "audit") return <VerificationChecklist />;
+  if (subPath === "integrity") return <AdminIntegrityHub />;
 
   return (
     <DashboardLayout role="seller" userName="Rajesh Kumar">
@@ -66,6 +72,20 @@ export default function SellerDashboard({ subPath }) {
          <MetricCard label="Bhaiya Rank" value="#12" icon={<Star className="text-dark-orange" />} trend="Top performing owner" />
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+         <div className="lg:col-span-2">
+            <StarSellerSection />
+         </div>
+         <div className="lg:col-span-1 bg-slate-50 rounded-[2.5rem] p-10 border border-slate-100 border-dashed">
+            <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-8">Quick Actions</h3>
+            <div className="space-y-4">
+               <QuickTask icon={<Zap />} title="Boost Listing" color="orange" path="/dashboard/boosts" />
+               <QuickTask icon={<FileText />} title="Check Docs" color="slate" path="/dashboard/docs" />
+               <QuickTask icon={<ShieldCheck />} title="Verify Property" color="green" path="/dashboard/audit" />
+            </div>
+         </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
          <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-xl overflow-hidden">
             <div className="flex items-center justify-between mb-8">
@@ -81,9 +101,9 @@ export default function SellerDashboard({ subPath }) {
          <div className="lg:col-span-1 bg-slate-50 rounded-[2.5rem] p-10 border border-slate-100 border-dashed">
             <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-8">Quick Actions</h3>
             <div className="space-y-4">
-               <QuickTask icon={<Zap />} title="Boost Listing" color="orange" />
-               <QuickTask icon={<FileText />} title="Check Docs" color="slate" />
-               <QuickTask icon={<ShieldCheck />} title="Verify ID" color="green" />
+               <QuickTask icon={<TrendingUp />} title="Market Trends" color="orange" path="/dashboard/integrity" />
+               <QuickTask icon={<Star />} title="Seller Status" color="slate" path="/dashboard" />
+               <QuickTask icon={<Zap />} title="Instant Boost" color="green" path="/dashboard/boosts" />
             </div>
          </div>
       </div>
@@ -229,14 +249,18 @@ function LeadItem({ name, property, status, time, active }) {
   );
 }
 
-function QuickTask({ icon, title, color }) {
+function QuickTask({ icon, title, color, path }) {
+  const navigate = useNavigate();
   const colorMap = {
      orange: "bg-orange-100 text-dark-orange",
      slate: "bg-slate-100 text-slate-900",
      green: "bg-green-100 text-green-600"
   }[color];
   return (
-    <div className="flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-100 hover:border-dark-orange transition-all cursor-pointer group shadow-sm">
+    <div 
+      onClick={() => path && navigate(path)}
+      className="flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-100 hover:border-dark-orange transition-all cursor-pointer group shadow-sm"
+    >
        <div className="flex items-center gap-4">
           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorMap} group-hover:scale-110 transition-transform`}>
              {icon}

@@ -45,6 +45,29 @@ export default function Footer() {
                 5th Floor, Suhatta Commercial Complex, City Center, Durgapur, WB
               </p>
             </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-6 w-full">
+              <Badge 
+                icon={<div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-white font-black text-[10px]">16</div>}
+                label="Industrial"
+                sub="Excellence"
+              />
+              <Badge 
+                icon={<div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-dark-orange">🛡️</div>}
+                label="Steel-Standard"
+                sub="Verification"
+              />
+              <Badge 
+                icon={<div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">🚛</div>}
+                label="Logistics"
+                sub="Optimized"
+              />
+              <Badge 
+                icon={<div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">👥</div>}
+                label="Trusted By"
+                sub="1M+ Users"
+              />
+            </div>
           </div>
 
           {/* Important Info */}
@@ -219,5 +242,16 @@ export default function Footer() {
         </Container>
       </div>
     </footer>
+  );
+}
+function Badge({ icon, label, sub }) {
+  return (
+    <div className="p-3 bg-white border border-slate-100 rounded-xl flex items-center gap-3 shadow-xs hover:shadow-md transition-all group">
+       <div className="group-hover:scale-110 transition-transform">{icon}</div>
+       <div className="leading-none">
+          <p className="text-[10px] font-black uppercase text-slate-900 tracking-tight">{label}</p>
+          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{sub}</p>
+       </div>
+    </div>
   );
 }

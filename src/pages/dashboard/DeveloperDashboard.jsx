@@ -30,6 +30,8 @@ import {
   MoreHorizontal,
   Search
 } from "lucide-react";
+import VerificationChecklist from "./VerificationChecklist";
+import AdminIntegrityHub from "./AdminIntegrityHub";
 
 export default function DeveloperDashboard({ subPath }) {
   // RENDER SUB-PAGES
@@ -37,6 +39,8 @@ export default function DeveloperDashboard({ subPath }) {
   if (subPath === "sales") return <SalesHubPage />;
   if (subPath === "bulk") return <BulkPage />;
   if (subPath === "crm") return <CRMPage />;
+  if (subPath === "audit") return <VerificationChecklist />;
+  if (subPath === "integrity") return <AdminIntegrityHub />;
 
   return (
     <DashboardLayout role="developer" userName="Emaar Properties">
